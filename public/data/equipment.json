@@ -1,0 +1,38 @@
+{
+  "lastUpdated": "2025-02-02T18:45:13+03:00",
+  "equipment": [
+    {
+      "id": 1,
+      "name": "Excavator CAT 320",
+      "year": "2023",
+      "images": [
+        {"url": "https://images.unsplash.com/photo-1579412690850-bd41cd0af397?w=800&q=80"},
+        {"url": "https://images.unsplash.com/photo-1573075175767-8a45ee453cdb?w=800&q=80"}
+      ],
+      "description": "20-ton hydraulic excavator with advanced control systems and excellent fuel efficiency. Perfect for medium to large construction projects.",
+      "price": "$500/day"
+    },
+    {
+      "id": 2,
+      "name": "Bulldozer D6",
+      "year": "2024",
+      "images": [
+        {"url": "https://images.unsplash.com/photo-1578849278619-e73505e9610f?w=800&q=80"},
+        {"url": "https://images.unsplash.com/photo-1573075175975-6e594e5b5edb?w=800&q=80"}
+      ],
+      "description": "Powerful track-type tractor with semi-universal blade, ideal for heavy earthmoving and construction work.",
+      "price": "$600/day"
+    },
+    {
+      "id": 3,
+      "name": "Crane LIEBHERR LTM",
+      "year": "2023",
+      "images": [
+        {"url": "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=800&q=80"},
+        {"url": "https://images.unsplash.com/photo-1570975640108-2255f2df5ffa?w=800&q=80"}
+      ],
+      "description": "Mobile crane with 200-ton lifting capacity. Features state-of-the-art control systems and excellent maneuverability.",
+      "price": "$800/day"
+    }
+  ]
+}

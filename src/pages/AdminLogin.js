@@ -1,57 +1,94 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAdmin } from '../contexts/AdminContext';
-import '../styles/AdminLogin.css';
+import { useNavigate } from 'react-router-dom';
+import { Card, Form, Input, Button, message } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { authService } from '../services/auth';
 
 const AdminLogin = () => {
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const { login } = useAdmin();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (login(password)) {
-      const redirectTo = location.state?.from || '/equipment';
-      navigate(redirectTo);
-    } else {
-      setError('Invalid password');
+  const onFinish = async (values) => {
+    setLoading(true);
+    try {
+      console.log('Login attempt started');
+      const user = await authService.login(values.email, values.password);
+      
+      if (user) {
+        console.log('User authenticated:', user.email);
+        message.success('Login successful!');
+        
+        // Verify admin status before navigation
+        const isAdmin = await authService.checkAdminStatus();
+        if (isAdmin) {
+          console.log('Admin verified, navigating to equipment page');
+          navigate('/admin/equipment', { replace: true });
+        } else {
+          await authService.logout();
+          message.error('Unauthorized access');
+        }
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      message.error(error.message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
-    <div className="admin-login-container">
-      <motion.div 
-        className="admin-login-card"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      background: '#f0f2f5'
+    }}>
+      <Card
+        title="Admin Login"
+        style={{ width: 300 }}
+        headStyle={{ textAlign: 'center' }}
       >
-        <h2>Admin Login</h2>
-        <form onSubmit={handleSubmit}>
-          {error && <div className="error-message">{error}</div>}
-          <div className="form-group">
-            <label htmlFor="password">Admin Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter admin password"
-              required
-            />
-          </div>
-          <motion.button
-            type="submit"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+        <Form
+          name="admin_login"
+          onFinish={onFinish}
+          layout="vertical"
+          autoComplete="off"
+        >
+          <Form.Item
+            name="email"
+            rules={[
+              { required: true, message: 'Please enter your email!' },
+              { type: 'email', message: 'Please enter a valid email!' }
+            ]}
           >
-            Login
-          </motion.button>
-        </form>
-      </motion.div>
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="Email"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: 'Please enter your password!' }]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Password"
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              block
+            >
+              Login
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };

@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Cloudinary } from '@cloudinary/base';
 
 const ImageUploader = ({ onUploadSuccess }) => {
   useEffect(() => {
@@ -7,7 +8,6 @@ const ImageUploader = ({ onUploadSuccess }) => {
     script.src = "https://upload-widget.cloudinary.com/global/all.js";
     script.async = true;
     document.body.appendChild(script);
-
     return () => {
       document.body.removeChild(script);
     };

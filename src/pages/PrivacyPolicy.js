@@ -10,7 +10,7 @@ const PrivacyPolicy = () => {
           <h1>Privacy Policy</h1>
           <p>Learn how we handle and protect your information</p>
         </div>
-      </section>
+      </section>  
 
       <section className="legal-content section">
         <div className="container">

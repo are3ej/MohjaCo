@@ -1,103 +1,136 @@
-import CryptoJS from 'crypto-js';
+import { 
+  signInWithEmailAndPassword, 
+  signOut,
+  onAuthStateChanged 
+} from 'firebase/auth';
+import { auth } from '../firebase';
 
-// Admin credentials (in a real app, these would be in a secure backend)
-const ADMIN_CREDENTIALS = {
-  username: 'admin@mohja.com',
-  // Password hash for extra security
-  passwordHash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' // admin
-};
-
-// Secret key for JWT (in a real app, this would be in environment variables)
-const JWT_SECRET = 'mohja-secret-key-2025';
+const ADMIN_EMAIL = 'areejaldabbagh03@gmail.com';
 
 class AuthService {
-  // Hash password before comparing
-  static hashPassword(password) {
-    return CryptoJS.SHA256(password).toString();
+  constructor() {
+    this.currentUser = null;
+    this.authStateListeners = new Set();
+    
+    onAuthStateChanged(auth, (user) => {
+      this.currentUser = user;
+      this.notifyListeners(user);
+    });
   }
 
-  // Create JWT token
-  static createToken(username) {
-    const now = new Date();
-    const expiresIn = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours
-
-    const payload = {
-      username,
-      iat: now.getTime(),
-      exp: expiresIn.getTime()
-    };
-
-    return CryptoJS.AES.encrypt(JSON.stringify(payload), JWT_SECRET).toString();
-  }
-
-  // Verify JWT token
-  static verifyToken(token) {
+  async login(email, password) {
     try {
-      const decrypted = CryptoJS.AES.decrypt(token, JWT_SECRET).toString(CryptoJS.enc.Utf8);
-      const payload = JSON.parse(decrypted);
+      if (!email || !password) {
+        throw new Error('Email and password are required');
+      }
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (user.email !== ADMIN_EMAIL) {
+        await this.logout();
+        throw new Error('Unauthorized access. Admin privileges required.');
+      }
+
+      // Store the user's token in localStorage
+      const token = await user.getIdToken();
+      localStorage.setItem('authToken', token);
+
+      return user;
+    } catch (error) {
+      console.error('Login error:', {
+        code: error.code,
+        message: error.message
+      });
+
+      switch (error.code) {
+        case 'auth/invalid-email':
+          throw new Error('Invalid email address');
+        case 'auth/user-disabled':
+          throw new Error('This account has been disabled');
+        case 'auth/user-not-found':
+          throw new Error('User not found');
+        default:
+          throw error;
+      }
+    }
+  }
+
+  async logout() {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('authToken');
+      this.currentUser = null;
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  }
+
+  getCurrentUser() {
+    return this.currentUser;
+  }
+
+  async checkAdminStatus() {
+    try {
+      // Check if there's an authenticated user
+      const user = this.getCurrentUser();
       
-      if (payload.exp < new Date().getTime()) {
+      if (!user) {
+        console.log('No user authenticated');
         return false;
       }
-      
+
+      // Check if the authenticated user is the admin
+      if (user.email !== ADMIN_EMAIL) {
+        console.log('User is not an admin', user.email);
+        return false;
+      }
+
+      // Verify the token is still valid
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.log('No authentication token found');
+        return false;
+      }
+
+      // Optional: You might want to add additional token validation here
       return true;
     } catch (error) {
+      console.error('Admin status check failed:', error);
       return false;
     }
   }
 
-  // Login function
-  static async login(username, password) {
-    // Add artificial delay to prevent brute force
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  isAuthenticated() {
+    return !!localStorage.getItem('authToken');
+  }
 
-    if (username !== ADMIN_CREDENTIALS.username) {
-      throw new Error('Invalid credentials');
-    }
+  isAdmin() {
+    return this.currentUser?.email === ADMIN_EMAIL;
+  }
 
-    const hashedPassword = this.hashPassword(password);
-    if (hashedPassword !== ADMIN_CREDENTIALS.passwordHash) {
-      throw new Error('Invalid credentials');
-    }
-
-    const token = this.createToken(username);
-    const expiresIn = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-
-    // Store auth data
-    localStorage.setItem('authToken', token);
-    localStorage.setItem('username', username);
-    localStorage.setItem('expiresIn', expiresIn.toISOString());
-
-    return {
-      username,
-      expiresIn
+  onAuthStateChanged(listener) {
+    this.authStateListeners.add(listener);
+    listener(this.currentUser);
+    
+    return () => {
+      this.authStateListeners.delete(listener);
     };
   }
 
-  // Logout function
-  static logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('username');
-    localStorage.removeItem('expiresIn');
-  }
-
-  // Check if user is authenticated
-  static isAuthenticated() {
-    const token = localStorage.getItem('authToken');
-    if (!token) return false;
-
-    return this.verifyToken(token);
-  }
-
-  // Get current session info
-  static getSession() {
-    if (!this.isAuthenticated()) return null;
-
-    return {
-      username: localStorage.getItem('username'),
-      expiresIn: new Date(localStorage.getItem('expiresIn'))
-    };
+  notifyListeners(user) {
+    this.authStateListeners.forEach(listener => {
+      try {
+        listener(user);
+      } catch (error) {
+        console.error('Error in auth state listener:', error);
+      }
+    });
   }
 }
 
-export default AuthService;
+// Create a singleton instance
+const authService = new AuthService();
+
+// Export both the class and the instance
+export { authService };

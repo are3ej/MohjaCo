@@ -180,14 +180,15 @@ const AdminEquipmentManager = () => {
       key: 'images',
       render: (images) => (
         <Space>
-          {images?.map((url, index) => (
+          {images?.slice(0, 3).map((url, index) => (
             <img 
               key={index}
               src={url}
               alt={`equipment-${index}`}
-              style={{ width: 50, height: 50, objectFit: 'cover' }}
+              style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
             />
           ))}
+          {images.length > 3 && <span>+{images.length - 3} more</span>}
         </Space>
       )
     },
@@ -253,17 +254,24 @@ const AdminEquipmentManager = () => {
               form.resetFields();
               setModalVisible(true);
             }}
+            style={{ marginBottom: '16px', padding: '10px 20px' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1890ff'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
           >
             Add New Equipment
           </Button>
           <Button
             icon={<LogoutOutlined />}
             onClick={handleLogout}
+            style={{ marginLeft: '8px', padding: '10px 20px' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ff4d4f'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
           >
             Logout
           </Button>
         </Space>
       }
+      style={{ margin: '20px', borderRadius: '8px' }}
     >
       <Table
         columns={columns}
@@ -273,7 +281,7 @@ const AdminEquipmentManager = () => {
       />
 
       <Modal
-        title={editingEquipment ? 'Edit Equipment' : 'Add New Equipment'}
+        title={editingEquipment ? 'Edit Equipment Details' : 'Add New Equipment'}
         visible={modalVisible}
         onCancel={() => {
           setModalVisible(false);
@@ -288,25 +296,28 @@ const AdminEquipmentManager = () => {
         >
           <Form.Item
             name="name"
-            label="Equipment Name"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Equipment Name</span>}
             rules={[{ required: true, message: 'Please enter equipment name!' }]}
+            style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
           >
-            <Input />
+            <Input placeholder="Enter equipment name" style={{ borderRadius: '4px' }} />
           </Form.Item>
 
           <Form.Item
             name="description"
-            label="Description"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Description</span>}
+            style={{ backgroundColor: 'white', padding: '10px' }}
           >
             <Input.TextArea />
           </Form.Item>
 
           <Form.Item
             name="category"
-            label="Category"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Category</span>}
             rules={[{ required: true, message: 'Please select a category!' }]}
+            style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
           >
-            <Select>
+            <Select style={{ borderRadius: '4px' }}>
               <Option value="Dozer">Dozer</Option>
               <Option value="Wheel loader">Wheel loader</Option>
               <Option value="Grader">Grader</Option>
@@ -317,16 +328,20 @@ const AdminEquipmentManager = () => {
 
           <Form.Item
             name="imageUrls"
-            label="Image URLs (comma-separated)"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Image URLs (comma-separated)</span>}
             rules={[{ required: true, message: 'Please enter image URLs!' }]}
             help="Enter Cloudinary links separated by commas"
+            style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
           >
             <Input.TextArea 
               placeholder="https://res.cloudinary.com/example1.jpg, https://res.cloudinary.com/example2.jpg"
+              autoSize={{ minRows: 2, maxRows: 6 }}
             />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item
+            style={{ backgroundColor: 'white', padding: '10px' }}
+          >
             <Button type="primary" htmlType="submit" loading={loading} block>
               {editingEquipment ? 'Update' : 'Add'}
             </Button>
@@ -342,6 +357,7 @@ const AdminEquipmentManager = () => {
           soldForm.resetFields();
         }}
         footer={null}
+        centered
       >
         <Form
           form={soldForm}
@@ -350,28 +366,33 @@ const AdminEquipmentManager = () => {
         >
           <Form.Item
             name="soldDate"
-            label="Sale Date"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Date</span>}
             rules={[{ required: true, message: 'Please select the sale date!' }]}
+            style={{ backgroundColor: 'white', padding: '10px' }}
           >
-            <DatePicker style={{ width: '100%' }} />
+            <DatePicker style={{ width: '100%', borderRadius: '4px' }} />
           </Form.Item>
 
           <Form.Item
             name="soldPrice"
-            label="Sale Price"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Price</span>}
             rules={[{ required: true, message: 'Please enter the sale price!' }]}
+            style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
           >
-            <Input type="number" prefix="$" />
+            <Input type="number" prefix="$" placeholder="Enter sale price" style={{ borderRadius: '4px' }} />
           </Form.Item>
 
           <Form.Item
             name="soldNotes"
-            label="Sale Notes"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Notes</span>}
+            style={{ backgroundColor: 'white', padding: '10px' }}
           >
             <Input.TextArea />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item
+            style={{ backgroundColor: 'white', padding: '10px' }}
+          >
             <Button type="primary" htmlType="submit" loading={loading} block>
               Confirm Sale
             </Button>

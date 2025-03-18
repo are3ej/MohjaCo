@@ -5,12 +5,12 @@ const TranslationContext = createContext();
 export const translations = {
   en: {
     // Home Page
-    transformingConstruction: "Construction Equipment",
+    transformingConstruction: "Mohja Company ",
     mohjaDescription: "Mohja Company delivers cutting-edge construction equipment and expert solutions tailored to your unique business needs. We combine innovation, quality, and reliability to drive your operational success.",
     ourEquipment: "Our Equipment",
     contactUs: "Contact Us",
     ourServices: "Our Services",
-    whyChooseUs: "Why Choose Us",
+    whyChooseUs: "Why To Choose Us",
     
     // Services
     strategicSourcing: "Strategic Sourcing",
@@ -128,7 +128,7 @@ export const translations = {
   
   ar: {
     // Home Page
-    transformingConstruction: "معدات البناء",
+    transformingConstruction:"شركة مهجه ",
     mohjaDescription: "تقدم شركة مهجة معدات بناء متطورة وحلولاً خبيرة مصممة خصيصاً لاحتياجات عملك الفريدة. نجمع بين الابتكار والجودة والموثوقية لدفع نجاح عملياتك.",
     ourEquipment: "معداتنا",
     contactUs: "اتصل بنا",

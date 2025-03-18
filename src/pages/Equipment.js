@@ -967,15 +967,35 @@ const Equipment = () => {
         </HeroContainer>
       </PageHeader>
 
-      <Select
-        placeholder={t('equipmentPage.selectCategoryPlaceholder')}
-        onChange={handleCategoryChange}
-        style={{ width: '100%', marginBottom: '20px' }}
-      >
-        {categories.map(category => (
-          <Option key={category} value={category}>{category}</Option>
-        ))}
-      </Select>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+        <SearchOutlined style={{ marginRight: '8px', fontSize: '1rem', color: '#006cac' }} />
+        <Select
+          placeholder={t('equipmentPage.selectCategoryPlaceholder')}
+          onChange={handleCategoryChange}
+          style={{ 
+            width: '100%', 
+            padding: '4px', 
+            borderRadius: '8px', 
+            border: '1px solid #d9d9d9', 
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)', 
+            fontSize: '0.8rem', 
+            transition: 'border-color 0.3s ease', 
+          }}
+          dropdownStyle={{ borderRadius: '8px' }}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#006cac';
+            e.target.style.boxShadow = '0 0 5px rgba(0, 108, 204, 0.5)';
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = '#d9d9d9';
+            e.target.style.boxShadow = 'none';
+          }}
+        >
+          {categories.map(category => (
+            <Option key={category} value={category} style={{ fontWeight: '600', fontSize: '0.8rem' }}>{category}</Option>
+          ))}
+        </Select>
+      </div>
 
       <GalleryContainer id="equipment-gallery">
         {currentItems.map((equipment, index) => {

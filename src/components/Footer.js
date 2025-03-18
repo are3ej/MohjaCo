@@ -456,7 +456,7 @@ const Footer = () => {
             >
               <LocationDetailItem>
                 <LocationLink 
-                  href="https://maps.app.goo.gl/wZhC5ZhsGVP9d4sy8" 
+                  href="https://maps.app.goo.gl/T4aD62w51XYiV8Yt6" 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >

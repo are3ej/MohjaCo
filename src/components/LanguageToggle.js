@@ -9,7 +9,7 @@ const StyledLanguageToggle = styled(motion.button)`
   background: transparent;
   border: 2px solid ${props => props.theme.colors?.white || '#fff'};
   color: ${props => props.theme.colors?.white || '#fff'};
-  padding: 8px 16px;
+  padding: 16px 23px;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;

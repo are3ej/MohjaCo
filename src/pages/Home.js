@@ -79,23 +79,23 @@ const PageContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(
-    135deg, 
-    ${MOHJA_DESIGN.COLORS.GRADIENT_START}, 
-    ${MOHJA_DESIGN.COLORS.GRADIENT_END}
-  );
-  color: ${MOHJA_DESIGN.COLORS.WHITE};
   position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  padding: ${MOHJA_DESIGN.SPACING.xl}rem 2rem;
-  text-align: center;
+  background: url('https://res.cloudinary.com/dv8gw1afl/image/upload/v1741951965/Screenshot_2025-03-14_142820_pohjml.png') no-repeat center center;
+  background-size: cover;
+  animation: slide 30s infinite alternate;
 
-  @media (max-width: 1200px) {
-    padding: ${MOHJA_DESIGN.SPACING.lg}rem 1rem;
-  }
-
-  @media (max-width: 768px) {
-    padding: ${MOHJA_DESIGN.SPACING.md}rem 0.5rem;
+  @keyframes slide {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 100% 0%;
+    }
   }
 `;
 
@@ -138,7 +138,6 @@ const HeroContent = styled.div`
 
 const HeroTitle = styled.h1`
   font-size: 3.5rem;
-  color: ${MOHJA_DESIGN.COLORS.WHITE};
   margin-bottom: ${MOHJA_DESIGN.SPACING.md}rem;
   line-height: 1.2;
   font-weight: 700;
@@ -162,7 +161,6 @@ const HeroTitle = styled.h1`
 
 const HeroSubtitle = styled.p`
   font-size: 1.2rem;
-  color: ${MOHJA_DESIGN.COLORS.WHITE};
   margin-bottom: ${MOHJA_DESIGN.SPACING.lg}rem;
   line-height: 1.6;
   opacity: 0.9;
@@ -383,10 +381,10 @@ const Home = () => {
         <HeroContainer>
           <HeroContent>
             <HeroTitle>
-            {t('transformingConstruction')}
+              <span style={{ color: '#006cac' }}>{t('transformingConstruction')}</span>
             </HeroTitle>
             <HeroSubtitle>
-            {t('mohjaDescription')}
+              <span style={{ color: '#e0e0e0' }}>{t('mohjaDescription')}</span>
             </HeroSubtitle>
             <HeroCTA>
               <CTAButton 

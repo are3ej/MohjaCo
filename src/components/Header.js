@@ -11,6 +11,19 @@ const underlineExpand = keyframes`
   to { width: 100%; }
 `;
 
+const glow = keyframes`
+  0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); }
+  50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.9); }
+  100% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); }
+`;
+
+const ripple = keyframes`
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+`;
+
 // Dynamic Color Context
 const ColorContext = createContext({
   primaryColor: MOHJA_DESIGN.COLORS.PRIMARY,
@@ -39,6 +52,7 @@ const ColorProvider = ({ children, route }) => {
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isContactDropdownOpen, setIsContactDropdownOpen] = useState(false); // State for dropdown
   const location = useLocation();
 
   // Scroll effect
@@ -56,6 +70,18 @@ const Header = () => {
     setIsMenuOpen(false);
   }, [location]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (isContactDropdownOpen && !e.target.closest('.contact-dropdown')) {
+        setIsContactDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isContactDropdownOpen]);
+
   const navItems = [
     { path: '/', label: 'Home', icon: <FaHome /> },
     { path: '/about', label: 'About', icon: <FaInfoCircle /> },
@@ -66,6 +92,10 @@ const Header = () => {
 
   const toggleMobileMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleContactDropdown = () => {
+    setIsContactDropdownOpen(!isContactDropdownOpen);
   };
 
   return (
@@ -86,7 +116,6 @@ const Header = () => {
                     <LogoImage src="/images/logo_5.png" alt="Mohja Logo" />
                     <LogoText>
                       <LogoMainText>MOHJA COMPANY</LogoMainText>
-                      <LogoSubtitle>FOR CONSTRUCTION EQUIPMENT TRADING</LogoSubtitle>
                     </LogoText>
                   </LogoWrapper>
                 </LogoSection>
@@ -105,10 +134,22 @@ const Header = () => {
                     ))}
                   </NavLinks>
                   <CallOptions>
-                    <CallOptionsButton primaryColor={primary} secondaryColor={secondary}>
-                      <FaPhoneAlt />
-                      Contact Us
-                    </CallOptionsButton>
+                    <CallOptionsContainer className="contact-dropdown">
+                      <CallOptionsButton 
+                        primaryColor={primary} 
+                        secondaryColor={secondary}
+                        onClick={toggleContactDropdown}
+                      >
+                        <FaPhoneAlt />
+                        <span>Call Us</span>
+                      </CallOptionsButton>
+                      {isContactDropdownOpen && (
+                        <DropdownMenu>
+                          <DropdownLink href="tel:+962790852699">Jordan: +962790852699</DropdownLink>
+                          <DropdownLink href="tel:+13014947165">USA: +1-301-494-7165</DropdownLink>
+                        </DropdownMenu>
+                      )}
+                    </CallOptionsContainer>
                     <LanguageToggleWrapper>
                       <LanguageToggle />
                     </LanguageToggleWrapper>
@@ -166,7 +207,7 @@ const StyledHeader = styled.header`
   backdrop-filter: blur(15px);
   transition: all 0.4s ease-in-out;
   box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
-  height: 70px;
+  height: 80px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid rgba(59, 130, 246, 0.1);
@@ -179,11 +220,11 @@ const StyledHeader = styled.header`
     );
     backdrop-filter: blur(20px);
     box-shadow: 0 8px 24px rgba(30, 58, 138, 0.15);
-    height: 60px;
+    height: 70px;
   `}
 
   @media (max-width: 768px) {
-    height: 60px;
+    height: 70px;
     padding: 0 1rem;
   }
 `;
@@ -195,7 +236,7 @@ const HeaderContainer = styled.div`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
 
   @media (max-width: 768px) {
     padding: 0 1rem;
@@ -212,12 +253,12 @@ const LogoSection = styled(Link)`
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
 `;
 
 const LogoImage = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   border-radius: 10px;
   object-fit: cover;
   box-shadow: 0 4px 10px rgba(30, 58, 138, 0.1);
@@ -236,26 +277,22 @@ const LogoText = styled.div`
 `;
 
 const LogoMainText = styled.div`
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: white;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-`;
+  animation: ${glow} 2s infinite;
 
-const LogoSubtitle = styled.div`
-  font-size: 0.6rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 0.2rem;
+  &:hover {
+    animation: ${glow} 1s infinite;
+  }
 `;
 
 const NavContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 
   @media (max-width: 768px) {
     display: none;
@@ -265,16 +302,16 @@ const NavContainer = styled.div`
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
 `;
 
 const NavLink = styled(Link)`
   position: relative;
   text-decoration: none;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -306,7 +343,11 @@ const NavLink = styled(Link)`
 const CallOptions = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
+`;
+
+const CallOptionsContainer = styled.div`
+  position: relative;
 `;
 
 const CallOptionsButton = styled.button`
@@ -317,16 +358,46 @@ const CallOptionsButton = styled.button`
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.878rem; /* Smaller font size for "Contact Us" */
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
     background: ${props => props.secondaryColor};
     transform: translateY(-2px);
+  }
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  z-index: 1000;
+  width: 100%;
+  min-width: 180px; /* Minimum width for dropdown */
+`;
+
+const DropdownLink = styled.a`
+  display: block;
+  padding: 0.5rem;
+  color: #1E3A8A;
+  font-size: 0.875rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-radius: 4px;
   }
 `;
 
@@ -340,7 +411,7 @@ const MobileMenuToggle = styled.button`
   background: none;
   border: none;
   color: white;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
 
@@ -359,7 +430,7 @@ const MobileMenu = styled.div`
   @media (max-width: 768px) {
     display: ${props => props.isOpen ? 'block' : 'none'};
     position: fixed;
-    top: 60px;
+    top: 70px;
     left: 0;
     width: 100%;
     background: linear-gradient(
@@ -367,7 +438,7 @@ const MobileMenu = styled.div`
       rgba(30, 58, 138, 0.95), 
       rgba(59, 130, 246, 0.95)
     );
-    padding: 1rem;
+    padding: 1.5rem;
     z-index: 999;
     backdrop-filter: blur(10px);
   }
@@ -376,16 +447,16 @@ const MobileMenu = styled.div`
 const MobileNavLinks = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 `;
 
 const MobileNavLink = styled(Link)`
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   color: white;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1rem;
   transition: all 0.3s ease;
   gap: 0.75rem;
 
@@ -398,8 +469,8 @@ const MobileNavLink = styled(Link)`
 const MobileCallOptions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: 1rem;
+  margin-top: 1.5rem;
 `;
 
 const MobileCallOptionsButton = styled.button`
@@ -410,8 +481,8 @@ const MobileCallOptionsButton = styled.button`
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
+  padding: 1rem;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;

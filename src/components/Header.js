@@ -17,13 +17,6 @@ const glow = keyframes`
   100% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); }
 `;
 
-const ripple = keyframes`
-  to {
-    transform: scale(4);
-    opacity: 0;
-  }
-`;
-
 // Dynamic Color Context
 const ColorContext = createContext({
   primaryColor: MOHJA_DESIGN.COLORS.PRIMARY,

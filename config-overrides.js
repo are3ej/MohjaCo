@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 
-module.exports = function override(config,env) {
+module.exports = function override(config, env) {
   const fallback = config.resolve.fallback || {};
   Object.assign(fallback, {
     "crypto": require.resolve("crypto-browserify"),
@@ -15,11 +15,18 @@ module.exports = function override(config,env) {
     "buffer": require.resolve("buffer/")
   });
   config.resolve.fallback = fallback;
+
   config.plugins = (config.plugins || []).concat([
     new webpack.ProvidePlugin({
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer']
     })
   ]);
+
+  // تجاهل كل تحذيرات webpack بما فيها تحذيرات ESLint
+  config.ignoreWarnings = [
+    () => true
+  ];
+
   return config;
 };

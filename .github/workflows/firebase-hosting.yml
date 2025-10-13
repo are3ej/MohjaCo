@@ -1,0 +1,74 @@
+name: Deploy to Firebase Hosting (React build)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./mohja-company
+      - name: Build
+        run: npm run build
+        working-directory: ./mohja-company
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-build
+          path: mohja-company/build
+
+  deploy-live:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: react-build
+          path: mohja-company/build
+      - name: Deploy to Firebase Hosting (live)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseToken: ${{ secrets.FIREBASE_TOKEN }}
+          projectId: mohja-1a6d4
+          channelId: live
+          entryPoint: ./mohja-company
+
+  deploy-preview:
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: react-build
+          path: mohja-company/build
+      - name: Deploy to Firebase Hosting (preview)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseToken: ${{ secrets.FIREBASE_TOKEN }}
+          projectId: mohja-1a6d4
+          channelId: pr-${{ github.event.number }}
+          expires: 7d
+          entryPoint: ./mohja-company
+

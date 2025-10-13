@@ -197,7 +197,7 @@ const Contact = () => {
     },
     {
       icon: <FacebookOutlined />,
-      action: () => window.open('https://web.facebook.com/MohjaCompany')
+      action: () => window.open('https://www.facebook.com/MohjaCompany')
     },
     {
       icon: <FaTiktok />,

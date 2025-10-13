@@ -19,15 +19,13 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm ci
-        working-directory: ./mohja-company
       - name: Build
         run: npm run build
-        working-directory: ./mohja-company
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: mohja-company/build
+          path: build
 
   deploy-live:
     needs: build
@@ -40,7 +38,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: react-build
-          path: mohja-company/build
+          path: build
       - name: Deploy to Firebase Hosting (live)
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -48,7 +46,7 @@ jobs:
           firebaseToken: ${{ secrets.FIREBASE_TOKEN }}
           projectId: mohja-1a6d4
           channelId: live
-          entryPoint: ./mohja-company
+          entryPoint: .
 
   deploy-preview:
     needs: build
@@ -61,7 +59,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: react-build
-          path: mohja-company/build
+          path: build
       - name: Deploy to Firebase Hosting (preview)
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -70,5 +68,5 @@ jobs:
           projectId: mohja-1a6d4
           channelId: pr-${{ github.event.number }}
           expires: 7d
-          entryPoint: ./mohja-company
+          entryPoint: .
 

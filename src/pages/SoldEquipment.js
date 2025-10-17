@@ -127,13 +127,8 @@ const SoldEquipment = () => {
   useEffect(() => {
     const fetchSoldEquipment = async () => {
       try {
-        // Fetch all equipment
-        const allEquipment = await firebaseService.getAllEquipment();
-
-        // Filter equipment with status "sold"
-        const soldItems = allEquipment.filter((item) => item.status === 'sold');
-
-        setSoldEquipment(soldItems);
+        const items = await firebaseService.getSoldEquipment();
+        setSoldEquipment(items);
       } catch (error) {
         console.error('Error fetching sold equipment:', error);
       }

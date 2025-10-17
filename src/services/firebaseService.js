@@ -177,6 +177,7 @@ try {
     await addDoc(this.soldEquipmentCollection, {
       ...equipmentDoc.data(),
       ...soldData,
+      status: 'sold',
       updatedBy: user.uid,
       updatedAt: new Date().toISOString()
     });

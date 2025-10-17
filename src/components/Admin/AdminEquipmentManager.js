@@ -220,14 +220,40 @@ const AdminEquipmentManager = () => {
           {images?.slice(0, 3).map((url, index) => {
             const isVideo = url.toLowerCase().match(/\.(mp4|mov|avi|webm|mkv)$/);
             return isVideo ? (
-              <video 
-                key={index}
-                src={url}
-                style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
-                muted
-                onMouseEnter={(e) => e.target.play()}
-                onMouseLeave={(e) => e.target.pause()}
-              />
+              <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
+                <video 
+                  src={url}
+                  style={{ 
+                    width: 50, 
+                    height: 50, 
+                    objectFit: 'cover', 
+                    marginRight: '8px',
+                    borderRadius: '4px'
+                  }}
+                  muted
+                  loop
+                  preload="metadata"
+                  onError={(e) => {
+                    console.error('Video thumbnail error:', e);
+                    e.target.style.display = 'none';
+                  }}
+                />
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  ▶
+                </div>
+              </div>
             ) : (
               <img 
                 key={index}
@@ -315,14 +341,40 @@ const AdminEquipmentManager = () => {
           {images?.slice(0, 3).map((url, index) => {
             const isVideo = url.toLowerCase().match(/\.(mp4|mov|avi|webm|mkv)$/);
             return isVideo ? (
-              <video 
-                key={index}
-                src={url}
-                style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
-                muted
-                onMouseEnter={(e) => e.target.play()}
-                onMouseLeave={(e) => e.target.pause()}
-              />
+              <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
+                <video 
+                  src={url}
+                  style={{ 
+                    width: 50, 
+                    height: 50, 
+                    objectFit: 'cover', 
+                    marginRight: '8px',
+                    borderRadius: '4px'
+                  }}
+                  muted
+                  loop
+                  preload="metadata"
+                  onError={(e) => {
+                    console.error('Video thumbnail error:', e);
+                    e.target.style.display = 'none';
+                  }}
+                />
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  ▶
+                </div>
+              </div>
             ) : (
               <img 
                 key={index}

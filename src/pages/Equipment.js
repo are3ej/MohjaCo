@@ -1028,16 +1028,63 @@ const Equipment = () => {
                 {(() => {
                   const isVideo = coverImage.toLowerCase().match(/\.(mp4|mov|avi|webm|mkv)$/);
                   return isVideo ? (
-                    <video
-                      src={coverImage}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      muted
-                      onError={(e) => {
-                        e.target.src = '/images/equipment-placeholder.jpg';
-                        e.target.onerror = null;
-                      }}
-                      onClick={() => openLightbox(equipment)}
-                    />
+                    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                      <video
+                        src={coverImage}
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover',
+                          cursor: 'pointer'
+                        }}
+                        muted
+                        loop
+                        preload="metadata"
+                        onError={(e) => {
+                          console.error('Video error:', e);
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'block';
+                        }}
+                        onClick={() => openLightbox(equipment)}
+                      />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          width: '60px',
+                          height: '60px',
+                          backgroundColor: 'rgba(0,0,0,0.7)',
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onClick={() => openLightbox(equipment)}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = 'rgba(0,0,0,0.9)';
+                          e.target.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                          e.target.style.transform = 'translate(-50%, -50%) scale(1)';
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: 0,
+                            height: 0,
+                            borderLeft: '20px solid white',
+                            borderTop: '12px solid transparent',
+                            borderBottom: '12px solid transparent',
+                            marginLeft: '4px'
+                          }}
+                        />
+                      </div>
+                    </div>
                   ) : (
                     <GalleryItemImage
                       src={coverImage}
@@ -1108,16 +1155,22 @@ const Equipment = () => {
               slide: ({ slide, currentIndex }) => {
                 if (slide.type === 'video') {
                   return (
-                    <video
-                      src={slide.src}
-                      controls
-                      autoPlay
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain'
-                      }}
-                    />
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <video
+                        src={slide.src}
+                        controls
+                        autoPlay
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '100%',
+                          objectFit: 'contain'
+                        }}
+                        onError={(e) => {
+                          console.error('Video playback error:', e);
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    </div>
                   );
                 }
                 return (

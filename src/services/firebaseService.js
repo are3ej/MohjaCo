@@ -177,7 +177,6 @@ try {
     await addDoc(this.soldEquipmentCollection, {
       ...equipmentDoc.data(),
       ...soldData,
-      soldAt: new Date().toISOString(),
       updatedBy: user.uid,
       updatedAt: new Date().toISOString()
     });
@@ -304,7 +303,7 @@ try {
       const soldData = soldEquipmentDoc.data();
       
       // Remove sold-specific fields and set status back to available
-      const { soldAt, soldPrice, soldNotes, updatedBy, updatedAt, ...equipmentData } = soldData;
+      const { soldPrice, soldNotes, updatedBy, updatedAt, ...equipmentData } = soldData;
       
       // Add back to equipment collection
       await addDoc(this.collection, {

@@ -9,7 +9,6 @@ import {
   message, 
   Space, 
   Select,
-  DatePicker,
   Tabs
 } from 'antd';
 import { 
@@ -163,9 +162,8 @@ const AdminEquipmentManager = () => {
   const handleSoldSubmit = async (values) => {
     try {
       const soldData = {
-        soldAt: values.soldDate.toISOString(),
-        soldPrice: values.soldPrice,
-        soldNotes: values.soldNotes,
+        soldPrice: values.soldPrice || null, // Allow null if no price entered
+        soldNotes: values.soldNotes || '', // Default to empty string if no notes
       };
   
       // Mark equipment as sold
@@ -599,29 +597,19 @@ const AdminEquipmentManager = () => {
           onFinish={handleSoldSubmit}
         >
           <Form.Item
-            name="soldDate"
-            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Date</span>}
-            rules={[{ required: true, message: 'Please select the sale date!' }]}
-            style={{ backgroundColor: 'white', padding: '10px' }}
-          >
-            <DatePicker style={{ width: '100%', borderRadius: '4px' }} />
-          </Form.Item>
-
-          <Form.Item
             name="soldPrice"
-            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Price</span>}
-            rules={[{ required: true, message: 'Please enter the sale price!' }]}
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Price (Optional)</span>}
             style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
           >
-            <Input type="number" prefix="$" placeholder="Enter sale price" style={{ borderRadius: '4px' }} />
+            <Input type="number" prefix="$" placeholder="Enter sale price (optional)" style={{ borderRadius: '4px' }} />
           </Form.Item>
 
           <Form.Item
             name="soldNotes"
-            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Notes</span>}
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Notes (Optional)</span>}
             style={{ backgroundColor: 'white', padding: '10px' }}
           >
-            <Input.TextArea />
+            <Input.TextArea placeholder="Add any notes about the sale (optional)" />
           </Form.Item>
 
           <Form.Item

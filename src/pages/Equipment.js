@@ -1041,9 +1041,7 @@ const Equipment = () => {
                         loop
                         preload="metadata"
                         onError={(e) => {
-                          console.error('Video error:', e);
                           e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'block';
                         }}
                         onClick={() => openLightbox(equipment)}
                       />
@@ -1155,7 +1153,7 @@ const Equipment = () => {
               slide: ({ slide, currentIndex }) => {
                 if (slide.type === 'video') {
                   return (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000' }}>
                       <video
                         src={slide.src}
                         controls
@@ -1166,7 +1164,6 @@ const Equipment = () => {
                           objectFit: 'contain'
                         }}
                         onError={(e) => {
-                          console.error('Video playback error:', e);
                           e.target.style.display = 'none';
                         }}
                       />

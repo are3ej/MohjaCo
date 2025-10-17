@@ -228,15 +228,34 @@ const AdminEquipmentManager = () => {
                     height: 50, 
                     objectFit: 'cover', 
                     marginRight: '8px',
-                    borderRadius: '4px'
+                    borderRadius: '4px',
+                    backgroundColor: '#f0f0f0'
                   }}
                   muted
                   loop
                   preload="metadata"
                   onError={(e) => {
-                    console.error('Video thumbnail error:', e);
+                    console.error('Video thumbnail error for URL:', url, e);
                     e.target.style.display = 'none';
+                    // Show a placeholder for broken videos
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = `
+                      width: 50px; 
+                      height: 50px; 
+                      background: #ff6b6b; 
+                      color: white; 
+                      display: flex; 
+                      align-items: center; 
+                      justify-content: center; 
+                      font-size: 10px; 
+                      margin-right: 8px; 
+                      border-radius: 4px;
+                    `;
+                    placeholder.textContent = 'VIDEO';
+                    e.target.parentNode.appendChild(placeholder);
                   }}
+                  onLoadStart={() => console.log('Admin video loading:', url)}
+                  onCanPlay={() => console.log('Admin video can play:', url)}
                 />
                 <div 
                   style={{
@@ -349,15 +368,34 @@ const AdminEquipmentManager = () => {
                     height: 50, 
                     objectFit: 'cover', 
                     marginRight: '8px',
-                    borderRadius: '4px'
+                    borderRadius: '4px',
+                    backgroundColor: '#f0f0f0'
                   }}
                   muted
                   loop
                   preload="metadata"
                   onError={(e) => {
-                    console.error('Video thumbnail error:', e);
+                    console.error('Video thumbnail error for URL:', url, e);
                     e.target.style.display = 'none';
+                    // Show a placeholder for broken videos
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = `
+                      width: 50px; 
+                      height: 50px; 
+                      background: #ff6b6b; 
+                      color: white; 
+                      display: flex; 
+                      align-items: center; 
+                      justify-content: center; 
+                      font-size: 10px; 
+                      margin-right: 8px; 
+                      border-radius: 4px;
+                    `;
+                    placeholder.textContent = 'VIDEO';
+                    e.target.parentNode.appendChild(placeholder);
                   }}
+                  onLoadStart={() => console.log('Admin video loading:', url)}
+                  onCanPlay={() => console.log('Admin video can play:', url)}
                 />
                 <div 
                   style={{

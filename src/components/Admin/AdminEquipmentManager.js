@@ -596,13 +596,6 @@ const AdminEquipmentManager = () => {
           layout="vertical"
           onFinish={handleSoldSubmit}
         >
-          <Form.Item
-            name="soldPrice"
-            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Price (Optional)</span>}
-            style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
-          >
-            <Input type="number" prefix="$" placeholder="Enter sale price (optional)" style={{ borderRadius: '4px' }} />
-          </Form.Item>
 
           <Form.Item
             name="soldNotes"

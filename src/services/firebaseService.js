@@ -274,6 +274,55 @@ try {
       throw error;
     }
   }
+
+  // Delete equipment
+  async deleteEquipment(id) {
+    try {
+      const user = this.checkUserAuthentication();
+      const equipmentRef = doc(db, COLLECTION_NAME, id);
+      await deleteDoc(equipmentRef);
+      return id;
+    } catch (error) {
+      console.error('Error deleting equipment:', error);
+      throw error;
+    }
+  }
+
+  // Return sold equipment back to available
+  async returnSoldEquipment(soldEquipmentId) {
+    try {
+      const user = this.checkUserAuthentication();
+      
+      // Get the sold equipment document
+      const soldEquipmentRef = doc(db, SOLD_EQUIPMENT_COLLECTION, soldEquipmentId);
+      const soldEquipmentDoc = await getDoc(soldEquipmentRef);
+
+      if (!soldEquipmentDoc.exists()) {
+        throw new Error('Sold equipment not found');
+      }
+
+      const soldData = soldEquipmentDoc.data();
+      
+      // Remove sold-specific fields and set status back to available
+      const { soldAt, soldPrice, soldNotes, updatedBy, updatedAt, ...equipmentData } = soldData;
+      
+      // Add back to equipment collection
+      await addDoc(this.collection, {
+        ...equipmentData,
+        status: 'available',
+        updatedBy: user.uid,
+        updatedAt: new Date().toISOString()
+      });
+
+      // Delete from sold equipment collection
+      await deleteDoc(soldEquipmentRef);
+
+      return soldEquipmentId;
+    } catch (error) {
+      console.error('Error returning sold equipment:', error);
+      throw error;
+    }
+  }
 }
 
 export const firebaseService = new FirebaseService();

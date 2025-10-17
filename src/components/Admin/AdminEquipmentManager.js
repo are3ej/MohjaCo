@@ -9,14 +9,16 @@ import {
   message, 
   Space, 
   Select,
-  DatePicker
+  DatePicker,
+  Tabs
 } from 'antd';
 import { 
   PlusOutlined, 
   EditOutlined, 
   DeleteOutlined,
   LogoutOutlined,
-  DollarOutlined
+  DollarOutlined,
+  UndoOutlined
 } from '@ant-design/icons';
 import { firebaseService } from '../../services/firebaseService';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +29,7 @@ const { Option } = Select;
 
 const AdminEquipmentManager = () => {
   const [equipment, setEquipment] = useState([]);
+  const [soldEquipment, setSoldEquipment] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingEquipment, setEditingEquipment] = useState(null);
@@ -38,6 +41,7 @@ const AdminEquipmentManager = () => {
 
   useEffect(() => {
     fetchEquipment();
+    fetchSoldEquipment();
   }, []);
 
   const fetchEquipment = async () => {
@@ -49,6 +53,15 @@ const AdminEquipmentManager = () => {
       message.error('Error fetching equipment');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSoldEquipment = async () => {
+    try {
+      const data = await firebaseService.getSoldEquipment();
+      setSoldEquipment(data);
+    } catch (error) {
+      message.error('Error fetching sold equipment');
     }
   };
 
@@ -151,9 +164,22 @@ const AdminEquipmentManager = () => {
       setSoldModalVisible(false);
       soldForm.resetFields();
       fetchEquipment();  // Refresh equipment list
+      fetchSoldEquipment(); // Refresh sold equipment list
     } catch (error) {
       console.error('Error:', error);
       message.error(error.message || 'Error marking equipment as sold');
+    }
+  };
+
+  const handleReturnSold = async (soldEquipmentId) => {
+    try {
+      await firebaseService.returnSoldEquipment(soldEquipmentId);
+      message.success('Equipment returned to available successfully');
+      fetchEquipment(); // Refresh equipment list
+      fetchSoldEquipment(); // Refresh sold equipment list
+    } catch (error) {
+      console.error('Error:', error);
+      message.error(error.message || 'Error returning equipment');
     }
   };
   
@@ -241,6 +267,69 @@ const AdminEquipmentManager = () => {
     },
   ];
 
+  const soldColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
+    },
+    {
+      title: 'Images',
+      dataIndex: 'images',
+      key: 'images',
+      render: (images) => (
+        <Space>
+          {images?.slice(0, 3).map((url, index) => (
+            <img 
+              key={index}
+              src={url}
+              alt={`equipment-${index}`}
+              style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
+            />
+          ))}
+          {images.length > 3 && <span>+{images.length - 3} more</span>}
+        </Space>
+      )
+    },
+    {
+      title: 'Sold Date',
+      dataIndex: 'soldAt',
+      key: 'soldAt',
+      render: (soldAt) => soldAt ? new Date(soldAt).toLocaleDateString() : 'N/A'
+    },
+    {
+      title: 'Sold Price',
+      dataIndex: 'soldPrice',
+      key: 'soldPrice',
+      render: (price) => price ? `$${price}` : 'N/A'
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Space>
+          <Button
+            type="primary"
+            icon={<UndoOutlined />}
+            onClick={() => handleReturnSold(record.id)}
+          >
+            Return to Available
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <Card
       title="Equipment Management"
@@ -273,12 +362,32 @@ const AdminEquipmentManager = () => {
       }
       style={{ margin: '20px', borderRadius: '8px' }}
     >
-      <Table
-        columns={columns}
-        dataSource={equipment}
-        rowKey="id"
-        loading={loading}
-      />
+      <Tabs defaultActiveKey="available" items={[
+        {
+          key: 'available',
+          label: 'Available Equipment',
+          children: (
+            <Table
+              columns={columns}
+              dataSource={equipment}
+              rowKey="id"
+              loading={loading}
+            />
+          )
+        },
+        {
+          key: 'sold',
+          label: 'Sold Equipment',
+          children: (
+            <Table
+              columns={soldColumns}
+              dataSource={soldEquipment}
+              rowKey="id"
+              loading={loading}
+            />
+          )
+        }
+      ]} />
 
       <Modal
         title={editingEquipment ? 'Edit Equipment Details' : 'Add New Equipment'}

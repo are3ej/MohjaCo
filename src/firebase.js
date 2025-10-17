@@ -22,12 +22,12 @@ import {
 } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID
+  apiKey: "AIzaSyCHzw8zZIb0VzkKrDLWDBmVaZy_TWJBMA8",
+  authDomain: "mohja-1a6d4.firebaseapp.com",
+  projectId: "mohja-1a6d4",
+  storageBucket: "mohja-1a6d4.firebasestorage.app",
+  messagingSenderId: "415250565266",
+  appId: "1:415250565266:web:b8aa75f1ec1c02a5bbbe4b"
 };
 
 // Initialize Firebase

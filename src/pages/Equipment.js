@@ -738,11 +738,17 @@ const Equipment = () => {
   const openLightbox = (equipment) => {
     if (!equipment.images || equipment.images.length === 0) return;
 
-    const lightboxImages = equipment.images.map((img, index) => ({
-      src: img.url || img,
-      alt: `${equipment.name} - Image ${index + 1}`,
-      number: `${index + 1}/${equipment.images.length}`
-    }));
+    const lightboxImages = equipment.images.map((img, index) => {
+      const url = img.url || img;
+      const isVideo = url.toLowerCase().match(/\.(mp4|mov|avi|webm|mkv)$/);
+      
+      return {
+        src: url,
+        alt: `${equipment.name} - ${isVideo ? 'Video' : 'Image'} ${index + 1}`,
+        number: `${index + 1}/${equipment.images.length}`,
+        type: isVideo ? 'video' : 'image'
+      };
+    });
 
     setLightboxImages(lightboxImages);
     setLightboxIndex(0);
@@ -1019,15 +1025,31 @@ const Equipment = () => {
               }}
             >
               <GalleryItemImageWrapper>
-                <GalleryItemImage
-                  src={coverImage}
-                  alt={equipment.name || t('equipmentPage.equipment')}
-                  onError={(e) => {
-                    e.target.src = '/images/equipment-placeholder.jpg';
-                    e.target.onerror = null;
-                  }}
-                  onClick={() => openLightbox(equipment)}
-                />
+                {(() => {
+                  const isVideo = coverImage.toLowerCase().match(/\.(mp4|mov|avi|webm|mkv)$/);
+                  return isVideo ? (
+                    <video
+                      src={coverImage}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      muted
+                      onError={(e) => {
+                        e.target.src = '/images/equipment-placeholder.jpg';
+                        e.target.onerror = null;
+                      }}
+                      onClick={() => openLightbox(equipment)}
+                    />
+                  ) : (
+                    <GalleryItemImage
+                      src={coverImage}
+                      alt={equipment.name || t('equipmentPage.equipment')}
+                      onError={(e) => {
+                        e.target.src = '/images/equipment-placeholder.jpg';
+                        e.target.onerror = null;
+                      }}
+                      onClick={() => openLightbox(equipment)}
+                    />
+                  );
+                })()}
                 {imageCount > 0 && (
                   <UpdatedImageNumberOverlay>
                     1/{imageCount}
@@ -1083,6 +1105,33 @@ const Equipment = () => {
             index={lightboxIndex}
             plugins={[Zoom, Thumbnails]}
             render={{
+              slide: ({ slide, currentIndex }) => {
+                if (slide.type === 'video') {
+                  return (
+                    <video
+                      src={slide.src}
+                      controls
+                      autoPlay
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain'
+                      }}
+                    />
+                  );
+                }
+                return (
+                  <img
+                    src={slide.src}
+                    alt={slide.alt}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain'
+                    }}
+                  />
+                );
+              },
               slideFooter: ({ slide, currentIndex }) => (
                 <div 
                   style={{ 
@@ -1096,7 +1145,7 @@ const Equipment = () => {
                     textAlign: 'center'
                   }}
                 >
-                  {slide.title} - {slide.number}
+                  {slide.alt} - {slide.number}
                 </div>
               )
             }}

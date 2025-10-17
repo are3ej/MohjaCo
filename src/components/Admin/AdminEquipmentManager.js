@@ -95,6 +95,17 @@ const AdminEquipmentManager = () => {
         throw new Error('Please enter valid Cloudinary links only');
       }
 
+      // Check for supported media formats
+      const supportedFormats = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.mp4', '.mov', '.avi', '.webm', '.mkv'];
+      const hasValidFormats = imageUrls.every(url => {
+        const lowerUrl = url.toLowerCase();
+        return supportedFormats.some(format => lowerUrl.includes(format));
+      });
+
+      if (!hasValidFormats) {
+        throw new Error('Please use supported media formats: JPG, PNG, GIF, MP4, MOV, AVI, WEBM');
+      }
+
       const equipmentData = {
         name: values.name.trim(),
         description: values.description?.trim() || '',
@@ -201,19 +212,31 @@ const AdminEquipmentManager = () => {
       key: 'category',
     },
     {
-      title: 'Images',
+      title: 'Media',
       dataIndex: 'images',
       key: 'images',
       render: (images) => (
         <Space>
-          {images?.slice(0, 3).map((url, index) => (
-            <img 
-              key={index}
-              src={url}
-              alt={`equipment-${index}`}
-              style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
-            />
-          ))}
+          {images?.slice(0, 3).map((url, index) => {
+            const isVideo = url.toLowerCase().match(/\.(mp4|mov|avi|webm|mkv)$/);
+            return isVideo ? (
+              <video 
+                key={index}
+                src={url}
+                style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
+                muted
+                onMouseEnter={(e) => e.target.play()}
+                onMouseLeave={(e) => e.target.pause()}
+              />
+            ) : (
+              <img 
+                key={index}
+                src={url}
+                alt={`equipment-${index}`}
+                style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
+              />
+            );
+          })}
           {images.length > 3 && <span>+{images.length - 3} more</span>}
         </Space>
       )
@@ -284,19 +307,31 @@ const AdminEquipmentManager = () => {
       key: 'category',
     },
     {
-      title: 'Images',
+      title: 'Media',
       dataIndex: 'images',
       key: 'images',
       render: (images) => (
         <Space>
-          {images?.slice(0, 3).map((url, index) => (
-            <img 
-              key={index}
-              src={url}
-              alt={`equipment-${index}`}
-              style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
-            />
-          ))}
+          {images?.slice(0, 3).map((url, index) => {
+            const isVideo = url.toLowerCase().match(/\.(mp4|mov|avi|webm|mkv)$/);
+            return isVideo ? (
+              <video 
+                key={index}
+                src={url}
+                style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
+                muted
+                onMouseEnter={(e) => e.target.play()}
+                onMouseLeave={(e) => e.target.pause()}
+              />
+            ) : (
+              <img 
+                key={index}
+                src={url}
+                alt={`equipment-${index}`}
+                style={{ width: 50, height: 50, objectFit: 'cover', marginRight: '8px' }}
+              />
+            );
+          })}
           {images.length > 3 && <span>+{images.length - 3} more</span>}
         </Space>
       )
@@ -437,13 +472,13 @@ const AdminEquipmentManager = () => {
 
           <Form.Item
             name="imageUrls"
-            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Image URLs (comma-separated)</span>}
-            rules={[{ required: true, message: 'Please enter image URLs!' }]}
-            help="Enter Cloudinary links separated by commas"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Media URLs (comma-separated)</span>}
+            rules={[{ required: true, message: 'Please enter media URLs!' }]}
+            help="Enter Cloudinary links for images and videos separated by commas. Supported formats: JPG, PNG, GIF, MP4, MOV, AVI"
             style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
           >
             <Input.TextArea 
-              placeholder="https://res.cloudinary.com/example1.jpg, https://res.cloudinary.com/example2.jpg"
+              placeholder="https://res.cloudinary.com/example1.jpg, https://res.cloudinary.com/example2.mp4, https://res.cloudinary.com/example3.png"
               autoSize={{ minRows: 2, maxRows: 6 }}
             />
           </Form.Item>

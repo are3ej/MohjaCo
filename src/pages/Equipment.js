@@ -26,7 +26,6 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
-import 'yet-another-react-lightbox/plugins/zoom.css';
 import { firebaseService } from '../services/firebaseService';
 import '../styles/Equipment.css';
 import styled from 'styled-components';

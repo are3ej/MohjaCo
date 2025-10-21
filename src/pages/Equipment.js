@@ -798,7 +798,9 @@ const Equipment = () => {
 
           <DetailsSection>
             <Typography.Paragraph>
-              {description || t('equipmentPage.noDescriptionAvailable')}
+              <p style={{whiteSpace: "pre-line"}}>
+                {description || t('equipmentPage.noDescriptionAvailable')}
+              </p>
             </Typography.Paragraph>
 
             {Object.entries(specifications).map(([key, value]) => (

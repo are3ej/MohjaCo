@@ -1106,6 +1106,9 @@ const Equipment = () => {
               
               <EquipmentCardDetails>
                 <EquipmentCardTitle>{equipment.name}</EquipmentCardTitle>
+                <EquipmentCardDescription style={{whiteSpace: "pre-line"}}>
+                  {equipment.description || t('equipmentPage.noDescriptionAvailable')}
+                </EquipmentCardDescription>
               </EquipmentCardDetails>
 
               <DetailsButton 

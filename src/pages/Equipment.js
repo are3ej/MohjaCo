@@ -1154,6 +1154,31 @@ const Equipment = () => {
             slides={lightboxImages}
             index={lightboxIndex}
             plugins={[Zoom, Thumbnails]}
+            zoom={{
+              maxZoomPixelRatio: 5,
+              zoomStep: 0.5,
+              doubleTapScale: 2,
+              doubleTapDelay: 300,
+              doubleClickDelay: 300,
+              doubleClickMaxStops: 2,
+              keyboardMoveDistance: 50,
+              wheelZoomDistanceFactor: 100,
+              pinchZoomDistanceFactor: 100,
+              scrollToZoom: true
+            }}
+            carousel={{
+              finite: lightboxImages.length <= 1,
+              preload: 2,
+            }}
+            animation={{
+              fade: 300,
+              swipe: 300,
+            }}
+            styles={{
+              container: { 
+                backgroundColor: 'rgba(0, 0, 0, 0.9)' 
+              },
+            }}
             render={{
               slide: ({ slide, currentIndex }) => {
                 if (slide.type === 'video') {
@@ -1203,24 +1228,6 @@ const Equipment = () => {
                   {slide.alt} - {slide.number}
                 </div>
               )
-            }}
-            zoom={{
-              maxZoomPixelRatio: 10,
-              zoomStep: 0.5,
-              doubleTapScale: 3,
-            }}
-            carousel={{
-              finite: lightboxImages.length <= 1,
-              preload: 2,
-            }}
-            animation={{
-              fade: 300,
-              swipe: 300,
-            }}
-            styles={{
-              container: { 
-                backgroundColor: 'rgba(0, 0, 0, 0.9)' 
-              },
             }}
           />
         </Modal>

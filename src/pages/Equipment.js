@@ -26,6 +26,7 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
+import 'yet-another-react-lightbox/plugins/zoom.css';
 import { firebaseService } from '../services/firebaseService';
 import '../styles/Equipment.css';
 import styled from 'styled-components';
@@ -1227,6 +1228,105 @@ const Equipment = () => {
                 >
                   {slide.alt} - {slide.number}
                 </div>
+              ),
+              buttonNext: () => (
+                <button
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '20px',
+                    transform: 'translateY(-50%)',
+                    background: 'rgba(0,0,0,0.7)',
+                    border: 'none',
+                    color: 'white',
+                    padding: '10px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    zIndex: 1000
+                  }}
+                >
+                  →
+                </button>
+              ),
+              buttonPrev: () => (
+                <button
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '20px',
+                    transform: 'translateY(-50%)',
+                    background: 'rgba(0,0,0,0.7)',
+                    border: 'none',
+                    color: 'white',
+                    padding: '10px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    zIndex: 1000
+                  }}
+                >
+                  ←
+                </button>
+              ),
+              buttonClose: () => (
+                <button
+                  style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    background: 'rgba(0,0,0,0.7)',
+                    border: 'none',
+                    color: 'white',
+                    padding: '10px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    zIndex: 1000
+                  }}
+                >
+                  ×
+                </button>
+              ),
+              buttonZoomIn: () => (
+                <button
+                  style={{
+                    position: 'absolute',
+                    top: '20px',
+                    left: '20px',
+                    background: 'rgba(0,0,0,0.7)',
+                    border: 'none',
+                    color: 'white',
+                    padding: '10px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    zIndex: 1000
+                  }}
+                  title="Zoom In"
+                >
+                  <ZoomInOutlined />
+                </button>
+              ),
+              buttonZoomOut: () => (
+                <button
+                  style={{
+                    position: 'absolute',
+                    top: '70px',
+                    left: '20px',
+                    background: 'rgba(0,0,0,0.7)',
+                    border: 'none',
+                    color: 'white',
+                    padding: '10px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    zIndex: 1000
+                  }}
+                  title="Zoom Out"
+                >
+                  <ZoomInOutlined style={{ transform: 'rotate(45deg)' }} />
+                </button>
               )
             }}
           />

@@ -1155,16 +1155,18 @@ const Equipment = () => {
             index={lightboxIndex}
             plugins={[Zoom, Thumbnails]}
             zoom={{
-              maxZoomPixelRatio: 5,
-              zoomStep: 0.5,
+              maxZoomPixelRatio: 3,
+              zoomStep: 0.2,
               doubleTapScale: 2,
               doubleTapDelay: 300,
               doubleClickDelay: 300,
               doubleClickMaxStops: 2,
               keyboardMoveDistance: 50,
-              wheelZoomDistanceFactor: 100,
-              pinchZoomDistanceFactor: 100,
-              scrollToZoom: true
+              wheelZoomDistanceFactor: 50,
+              pinchZoomDistanceFactor: 50,
+              scrollToZoom: true,
+              wheelZoomDistanceFactor: 50,
+              pinchZoomDistanceFactor: 50
             }}
             carousel={{
               finite: lightboxImages.length <= 1,
@@ -1350,6 +1352,92 @@ const Equipment = () => {
                   title="إغلاق المعرض"
                 >
                   <CloseOutlined />
+                </button>
+              ),
+              buttonZoomIn: () => (
+                <button
+                  onClick={() => {
+                    // Trigger zoom in programmatically
+                    const lightboxElement = document.querySelector('.yarl__slide');
+                    if (lightboxElement) {
+                      lightboxElement.style.transform = 'scale(1.2)';
+                    }
+                  }}
+                  style={{
+                    position: 'absolute',
+                    top: '24px',
+                    left: '24px',
+                    background: 'rgba(0,108,204,0.8)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    color: 'white',
+                    padding: '12px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    zIndex: 1000,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'rgba(0,108,204,1)';
+                    e.target.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(0,108,204,0.8)';
+                    e.target.style.transform = 'scale(1)';
+                  }}
+                  title="تكبير الصورة"
+                >
+                  <ZoomInOutlined />
+                </button>
+              ),
+              buttonZoomOut: () => (
+                <button
+                  onClick={() => {
+                    // Trigger zoom out programmatically
+                    const lightboxElement = document.querySelector('.yarl__slide');
+                    if (lightboxElement) {
+                      lightboxElement.style.transform = 'scale(1)';
+                    }
+                  }}
+                  style={{
+                    position: 'absolute',
+                    top: '88px',
+                    left: '24px',
+                    background: 'rgba(0,108,204,0.8)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    color: 'white',
+                    padding: '12px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    zIndex: 1000,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'rgba(0,108,204,1)';
+                    e.target.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(0,108,204,0.8)';
+                    e.target.style.transform = 'scale(1)';
+                  }}
+                  title="تصغير الصورة"
+                >
+                  <ZoomInOutlined style={{ transform: 'rotate(45deg)' }} />
                 </button>
               )
             }}

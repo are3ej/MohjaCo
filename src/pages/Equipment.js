@@ -1233,6 +1233,11 @@ const Equipment = () => {
               ),
               buttonNext: () => (
                 <button
+                  onClick={() => {
+                    if (lightboxIndex < lightboxImages.length - 1) {
+                      setLightboxIndex(lightboxIndex + 1);
+                    }
+                  }}
                   style={{
                     position: 'absolute',
                     top: '50%',
@@ -1263,13 +1268,18 @@ const Equipment = () => {
                     e.target.style.background = 'rgba(255,255,255,0.1)';
                     e.target.style.transform = 'translateY(-50%) scale(1)';
                   }}
-                  title="Next Image"
+                  title="الصورة التالية"
                 >
                   <RightOutlined />
                 </button>
               ),
               buttonPrev: () => (
                 <button
+                  onClick={() => {
+                    if (lightboxIndex > 0) {
+                      setLightboxIndex(lightboxIndex - 1);
+                    }
+                  }}
                   style={{
                     position: 'absolute',
                     top: '50%',
@@ -1300,13 +1310,14 @@ const Equipment = () => {
                     e.target.style.background = 'rgba(255,255,255,0.1)';
                     e.target.style.transform = 'translateY(-50%) scale(1)';
                   }}
-                  title="Previous Image"
+                  title="الصورة السابقة"
                 >
                   <LeftOutlined />
                 </button>
               ),
               buttonClose: () => (
                 <button
+                  onClick={() => setLightboxOpen(false)}
                   style={{
                     position: 'absolute',
                     top: '24px',
@@ -1336,81 +1347,9 @@ const Equipment = () => {
                     e.target.style.background = 'rgba(255,255,255,0.1)';
                     e.target.style.transform = 'scale(1)';
                   }}
-                  title="Close Gallery"
+                  title="إغلاق المعرض"
                 >
                   <CloseOutlined />
-                </button>
-              ),
-              buttonZoomIn: () => (
-                <button
-                  style={{
-                    position: 'absolute',
-                    top: '24px',
-                    left: '24px',
-                    background: 'rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    color: 'white',
-                    padding: '12px',
-                    borderRadius: '50%',
-                    cursor: 'pointer',
-                    fontSize: '18px',
-                    zIndex: 1000,
-                    transition: 'all 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '48px',
-                    height: '48px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'rgba(0,108,204,0.3)';
-                    e.target.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.1)';
-                    e.target.style.transform = 'scale(1)';
-                  }}
-                  title="Zoom In (Scroll or Double-click)"
-                >
-                  <ZoomInOutlined />
-                </button>
-              ),
-              buttonZoomOut: () => (
-                <button
-                  style={{
-                    position: 'absolute',
-                    top: '88px',
-                    left: '24px',
-                    background: 'rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    color: 'white',
-                    padding: '12px',
-                    borderRadius: '50%',
-                    cursor: 'pointer',
-                    fontSize: '18px',
-                    zIndex: 1000,
-                    transition: 'all 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '48px',
-                    height: '48px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'rgba(0,108,204,0.3)';
-                    e.target.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.1)';
-                    e.target.style.transform = 'scale(1)';
-                  }}
-                  title="Zoom Out (Scroll or Double-click)"
-                >
-                  <ZoomInOutlined style={{ transform: 'rotate(45deg)' }} />
                 </button>
               )
             }}

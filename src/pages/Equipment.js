@@ -1219,13 +1219,16 @@ const Equipment = () => {
                     bottom: 0, 
                     left: 0, 
                     right: 0, 
-                    padding: '10px', 
-                    background: 'rgba(0,0,0,0.5)', 
+                    padding: '16px 24px', 
+                    background: 'linear-gradient(transparent, rgba(0,0,0,0.8))', 
                     color: 'white',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    letterSpacing: '0.5px'
                   }}
                 >
-                  {slide.alt} - {slide.number}
+                  {slide.alt} • {slide.number}
                 </div>
               ),
               buttonNext: () => (
@@ -1233,19 +1236,36 @@ const Equipment = () => {
                   style={{
                     position: 'absolute',
                     top: '50%',
-                    right: '20px',
+                    right: '24px',
                     transform: 'translateY(-50%)',
-                    background: 'rgba(0,0,0,0.7)',
-                    border: 'none',
+                    background: 'rgba(255,255,255,0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     color: 'white',
-                    padding: '10px',
+                    padding: '12px',
                     borderRadius: '50%',
                     cursor: 'pointer',
-                    fontSize: '18px',
-                    zIndex: 1000
+                    fontSize: '20px',
+                    zIndex: 1000,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
                   }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'rgba(255,255,255,0.2)';
+                    e.target.style.transform = 'translateY(-50%) scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255,255,255,0.1)';
+                    e.target.style.transform = 'translateY(-50%) scale(1)';
+                  }}
+                  title="Next Image"
                 >
-                  →
+                  <RightOutlined />
                 </button>
               ),
               buttonPrev: () => (
@@ -1253,56 +1273,106 @@ const Equipment = () => {
                   style={{
                     position: 'absolute',
                     top: '50%',
-                    left: '20px',
+                    left: '24px',
                     transform: 'translateY(-50%)',
-                    background: 'rgba(0,0,0,0.7)',
-                    border: 'none',
+                    background: 'rgba(255,255,255,0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     color: 'white',
-                    padding: '10px',
+                    padding: '12px',
                     borderRadius: '50%',
                     cursor: 'pointer',
-                    fontSize: '18px',
-                    zIndex: 1000
+                    fontSize: '20px',
+                    zIndex: 1000,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
                   }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'rgba(255,255,255,0.2)';
+                    e.target.style.transform = 'translateY(-50%) scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255,255,255,0.1)';
+                    e.target.style.transform = 'translateY(-50%) scale(1)';
+                  }}
+                  title="Previous Image"
                 >
-                  ←
+                  <LeftOutlined />
                 </button>
               ),
               buttonClose: () => (
                 <button
                   style={{
                     position: 'absolute',
-                    top: '20px',
-                    right: '20px',
-                    background: 'rgba(0,0,0,0.7)',
-                    border: 'none',
+                    top: '24px',
+                    right: '24px',
+                    background: 'rgba(255,255,255,0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     color: 'white',
-                    padding: '10px',
+                    padding: '12px',
                     borderRadius: '50%',
                     cursor: 'pointer',
-                    fontSize: '18px',
-                    zIndex: 1000
+                    fontSize: '20px',
+                    zIndex: 1000,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
                   }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'rgba(255,0,0,0.2)';
+                    e.target.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255,255,255,0.1)';
+                    e.target.style.transform = 'scale(1)';
+                  }}
+                  title="Close Gallery"
                 >
-                  ×
+                  <CloseOutlined />
                 </button>
               ),
               buttonZoomIn: () => (
                 <button
                   style={{
                     position: 'absolute',
-                    top: '20px',
-                    left: '20px',
-                    background: 'rgba(0,0,0,0.7)',
-                    border: 'none',
+                    top: '24px',
+                    left: '24px',
+                    background: 'rgba(255,255,255,0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     color: 'white',
-                    padding: '10px',
+                    padding: '12px',
                     borderRadius: '50%',
                     cursor: 'pointer',
                     fontSize: '18px',
-                    zIndex: 1000
+                    zIndex: 1000,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
                   }}
-                  title="Zoom In"
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'rgba(0,108,204,0.3)';
+                    e.target.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255,255,255,0.1)';
+                    e.target.style.transform = 'scale(1)';
+                  }}
+                  title="Zoom In (Scroll or Double-click)"
                 >
                   <ZoomInOutlined />
                 </button>
@@ -1311,18 +1381,34 @@ const Equipment = () => {
                 <button
                   style={{
                     position: 'absolute',
-                    top: '70px',
-                    left: '20px',
-                    background: 'rgba(0,0,0,0.7)',
-                    border: 'none',
+                    top: '88px',
+                    left: '24px',
+                    background: 'rgba(255,255,255,0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     color: 'white',
-                    padding: '10px',
+                    padding: '12px',
                     borderRadius: '50%',
                     cursor: 'pointer',
                     fontSize: '18px',
-                    zIndex: 1000
+                    zIndex: 1000,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48px',
+                    height: '48px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
                   }}
-                  title="Zoom Out"
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'rgba(0,108,204,0.3)';
+                    e.target.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255,255,255,0.1)';
+                    e.target.style.transform = 'scale(1)';
+                  }}
+                  title="Zoom Out (Scroll or Double-click)"
                 >
                   <ZoomInOutlined style={{ transform: 'rotate(45deg)' }} />
                 </button>

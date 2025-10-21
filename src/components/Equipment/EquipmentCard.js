@@ -37,7 +37,7 @@ const EquipmentCard = ({ equipment }) => {
       
       <div className="equipment-details">
         <h3 className="equipment-name">{name}</h3>
-        <p className="equipment-description">{description}</p>
+        <p className="equipment-description" style={{whiteSpace: "pre-line"}}>{description}</p>
         
         {specs && (
           <div className="equipment-specs">

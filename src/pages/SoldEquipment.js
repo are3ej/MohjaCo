@@ -212,7 +212,7 @@ const SoldEquipment = () => {
     title={equipment.name}
     description={
       <>
-        <Text>{equipment.description}</Text>
+        <Text style={{whiteSpace: "pre-line"}}>{equipment.description}</Text>
         <br />
         <Tag color="red">{equipment.status?.toUpperCase()}</Tag>
       </>

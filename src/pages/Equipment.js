@@ -1148,6 +1148,14 @@ const Equipment = () => {
           width="80%"
           centered
         >
+          <style>{`
+            @media (max-width: 600px) {
+              .m-lightbox-btn { width: 36px !important; height: 36px !important; font-size: 16px !important; padding: 6px !important; }
+              .m-next { right: 12px !important; }
+              .m-prev { left: 12px !important; }
+              .m-close { right: 60px !important; top: 12px !important; }
+            }
+          `}</style>
           <Lightbox
             open={lightboxOpen}
             close={() => setLightboxOpen(false)}
@@ -1235,9 +1243,11 @@ const Equipment = () => {
               ),
               buttonNext: () => (
                 <button
+                  className="m-lightbox-btn m-next"
                   onClick={() => {
-                    if (lightboxIndex < lightboxImages.length - 1) {
-                      setLightboxIndex(lightboxIndex + 1);
+                    if (lightboxImages.length > 0) {
+                      const nextIndex = (lightboxIndex + 1) % lightboxImages.length;
+                      setLightboxIndex(nextIndex);
                     }
                   }}
                   style={{
@@ -1253,7 +1263,7 @@ const Equipment = () => {
                     borderRadius: '50%',
                     cursor: 'pointer',
                     fontSize: '20px',
-                    zIndex: 1000,
+                    zIndex: 1200,
                     transition: 'all 0.3s ease',
                     display: 'flex',
                     alignItems: 'center',
@@ -1277,9 +1287,11 @@ const Equipment = () => {
               ),
               buttonPrev: () => (
                 <button
+                  className="m-lightbox-btn m-prev"
                   onClick={() => {
-                    if (lightboxIndex > 0) {
-                      setLightboxIndex(lightboxIndex - 1);
+                    if (lightboxImages.length > 0) {
+                      const prevIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+                      setLightboxIndex(prevIndex);
                     }
                   }}
                   style={{
@@ -1295,7 +1307,7 @@ const Equipment = () => {
                     borderRadius: '50%',
                     cursor: 'pointer',
                     fontSize: '20px',
-                    zIndex: 1000,
+                    zIndex: 1200,
                     transition: 'all 0.3s ease',
                     display: 'flex',
                     alignItems: 'center',
@@ -1319,26 +1331,27 @@ const Equipment = () => {
               ),
               buttonClose: () => (
                 <button
+                  className="m-lightbox-btn m-close"
                   onClick={() => setLightboxOpen(false)}
                   style={{
                     position: 'absolute',
-                    top: '24px',
-                    right: '24px',
+                    top: '16px',
+                    right: '80px',
                     background: 'rgba(255,255,255,0.1)',
                     backdropFilter: 'blur(10px)',
                     border: '1px solid rgba(255,255,255,0.2)',
                     color: 'white',
-                    padding: '12px',
+                    padding: '10px',
                     borderRadius: '50%',
                     cursor: 'pointer',
-                    fontSize: '20px',
-                    zIndex: 1000,
+                    fontSize: '18px',
+                    zIndex: 1200,
                     transition: 'all 0.3s ease',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '48px',
-                    height: '48px',
+                    width: '44px',
+                    height: '44px',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
                   }}
                   onMouseEnter={(e) => {

@@ -276,6 +276,13 @@ const LanguageToggleContainer = styled.div`
 `;
 const About = () => {
   const { t, language } = useTranslation();
+
+  const handleServicesClick = () => {
+    // Scroll to top after navigation
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  };
   const companyValues = [
     {
       icon: <CheckCircleOutlined />,
@@ -407,6 +414,7 @@ const About = () => {
           >
             <Link 
               to="/services" 
+              onClick={handleServicesClick}
               style={{
                 display: 'flex',
                 alignItems: 'center',

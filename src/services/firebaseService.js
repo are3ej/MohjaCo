@@ -323,6 +323,39 @@ try {
       throw error;
     }
   }
+
+  // Update sold equipment
+  async updateSoldEquipment(id, equipmentData) {
+    try {
+      this.validateEquipmentData(equipmentData);
+      const user = this.checkUserAuthentication();
+
+      const soldEquipmentRef = doc(db, SOLD_EQUIPMENT_COLLECTION, id);
+      await updateDoc(soldEquipmentRef, {
+        ...equipmentData,
+        updatedBy: user.uid,
+        updatedAt: new Date().toISOString()
+      });
+
+      return id;
+    } catch (error) {
+      console.error('Error updating sold equipment:', error);
+      throw error;
+    }
+  }
+
+  // Delete sold equipment
+  async deleteSoldEquipment(id) {
+    try {
+      const user = this.checkUserAuthentication();
+      const soldEquipmentRef = doc(db, SOLD_EQUIPMENT_COLLECTION, id);
+      await deleteDoc(soldEquipmentRef);
+      return id;
+    } catch (error) {
+      console.error('Error deleting sold equipment:', error);
+      throw error;
+    }
+  }
 }
 
 export const firebaseService = new FirebaseService();

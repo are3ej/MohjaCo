@@ -17,6 +17,13 @@ const Services = () => {
   const [activeService, setActiveService] = useState(null);
   const { language, t } = useTranslation();
 
+  const handleLinkClick = (to) => {
+    // Scroll to top after navigation
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  };
+
   const services = [
     {
       id: 1,
@@ -91,7 +98,7 @@ const Services = () => {
             </ServiceIcon>
             <ServiceTitle>{t(service.title)}</ServiceTitle>
             <ServiceDescription>{t(service.description)}</ServiceDescription>
-            <LearnMoreLink to={service.link}>
+            <LearnMoreLink to={service.link} onClick={() => handleLinkClick(service.link)}>
               {t('learnMore')}
               <ArrowIcon />
             </LearnMoreLink>
@@ -108,6 +115,7 @@ const Services = () => {
           <CTAButtons>
             <PrimaryButton 
               to="/equipment" 
+              onClick={() => handleLinkClick('/equipment')}
               style={{ 
                 backgroundColor: MOHJA_DESIGN.COLORS.WHITE, 
                 color: MOHJA_DESIGN.COLORS.PRIMARY,
@@ -124,6 +132,7 @@ const Services = () => {
             </PrimaryButton>
             <PrimaryButton 
               to="/contact" 
+              onClick={() => handleLinkClick('/contact')}
               style={{ 
                 backgroundColor: MOHJA_DESIGN.COLORS.ACCENT, 
                 color: MOHJA_DESIGN.COLORS.WHITE,

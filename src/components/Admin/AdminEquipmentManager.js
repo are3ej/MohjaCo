@@ -34,8 +34,11 @@ const AdminEquipmentManager = () => {
   const [editingEquipment, setEditingEquipment] = useState(null);
   const [soldModalVisible, setSoldModalVisible] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState(null);
+  const [editingSoldEquipment, setEditingSoldEquipment] = useState(null);
+  const [soldEditModalVisible, setSoldEditModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [soldForm] = Form.useForm();
+  const [soldEditForm] = Form.useForm();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -189,6 +192,83 @@ const AdminEquipmentManager = () => {
     } catch (error) {
       console.error('Error:', error);
       message.error(error.message || 'Error returning equipment');
+    }
+  };
+
+  const handleEditSold = async (values) => {
+    setLoading(true);
+    try {
+      const imageUrls = values.imageUrls
+        .split(',')
+        .map(url => url.trim())
+        .filter(url => url.length > 0);
+
+      const validUrls = imageUrls.every(url => {
+        try {
+          new URL(url);
+          return url.includes('cloudinary.com');
+        } catch {
+          return false;
+        }
+      });
+
+      if (!validUrls) {
+        throw new Error('Please enter valid Cloudinary links only');
+      }
+
+      // Check for supported media formats
+      const supportedFormats = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.mp4', '.mov', '.avi', '.webm', '.mkv'];
+      const hasValidFormats = imageUrls.every(url => {
+        const lowerUrl = url.toLowerCase();
+        return supportedFormats.some(format => lowerUrl.includes(format));
+      });
+
+      if (!hasValidFormats) {
+        throw new Error('Please use supported media formats: JPG, PNG, GIF, MP4, MOV, AVI, WEBM');
+      }
+
+      const equipmentData = {
+        name: values.name.trim(),
+        description: values.description?.trim() || '',
+        category: values.category.trim(),
+        images: imageUrls,
+        soldPrice: values.soldPrice || null,
+        soldNotes: values.soldNotes || ''
+      };
+
+      if (!equipmentData.name) {
+        throw new Error('Equipment name is required');
+      }
+      
+      if (!equipmentData.category) {
+        throw new Error('Category is required');
+      }
+
+      if (imageUrls.length === 0) {
+        throw new Error('At least one image URL is required');
+      }
+
+      await firebaseService.updateSoldEquipment(editingSoldEquipment.id, equipmentData);
+      message.success('Sold equipment updated successfully');
+      
+      setSoldEditModalVisible(false);
+      soldEditForm.resetFields();
+      fetchSoldEquipment();
+    } catch (error) {
+      console.error('Error:', error);
+      message.error(error.message || 'Error updating sold equipment');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteSold = async (id) => {
+    try {
+      await firebaseService.deleteSoldEquipment(id);
+      message.success('Sold equipment deleted successfully');
+      fetchSoldEquipment();
+    } catch (error) {
+      message.error('Error deleting sold equipment');
     }
   };
   
@@ -442,6 +522,27 @@ const AdminEquipmentManager = () => {
       render: (_, record) => (
         <Space>
           <Button
+            icon={<EditOutlined />}
+            onClick={() => {
+              const formData = {
+                ...record,
+                imageUrls: record.images?.join(', ')
+              };
+              setEditingSoldEquipment(record);
+              soldEditForm.setFieldsValue(formData);
+              setSoldEditModalVisible(true);
+            }}
+          >
+            Edit
+          </Button>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDeleteSold(record.id)}
+          >
+            Delete
+          </Button>
+          <Button
             type="primary"
             icon={<UndoOutlined />}
             onClick={() => handleReturnSold(record.id)}
@@ -610,6 +711,96 @@ const AdminEquipmentManager = () => {
           >
             <Button type="primary" htmlType="submit" loading={loading} block>
               Confirm Sale
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Edit Sold Equipment"
+        visible={soldEditModalVisible}
+        onCancel={() => {
+          setSoldEditModalVisible(false);
+          soldEditForm.resetFields();
+        }}
+        footer={null}
+      >
+        <Form
+          form={soldEditForm}
+          layout="vertical"
+          onFinish={handleEditSold}
+        >
+          <Form.Item
+            name="name"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Equipment Name</span>}
+            rules={[{ required: true, message: 'Please enter equipment name!' }]}
+            style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
+          >
+            <Input placeholder="Enter equipment name" style={{ borderRadius: '4px' }} />
+          </Form.Item>
+
+          <Form.Item
+            name="description"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Description</span>}
+            style={{ backgroundColor: 'white', padding: '10px' }}
+          >
+            <Input.TextArea />
+          </Form.Item>
+
+          <Form.Item
+            name="category"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Category</span>}
+            rules={[{ required: true, message: 'Please select a category!' }]}
+            style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
+          >
+            <Select style={{ borderRadius: '4px' }}>
+              <Option value="Dozer">Dozer</Option>
+              <Option value="Wheel loader">Wheel loader</Option>
+              <Option value="Grader">Grader</Option>
+              <Option value="Excavator">Excavator</Option>
+              <Option value="Compactor">Compactor</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="imageUrls"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Media URLs (comma-separated)</span>}
+            rules={[{ required: true, message: 'Please enter media URLs!' }]}
+            help="Enter Cloudinary links for images and videos separated by commas. Supported formats: JPG, PNG, GIF, MP4, MOV, AVI"
+            style={{ backgroundColor: 'white', marginBottom: '16px', padding: '10px' }}
+          >
+            <Input.TextArea 
+              placeholder="https://res.cloudinary.com/example1.jpg, https://res.cloudinary.com/example2.mp4, https://res.cloudinary.com/example3.png"
+              autoSize={{ minRows: 2, maxRows: 6 }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="soldPrice"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sold Price (Optional)</span>}
+            style={{ backgroundColor: 'white', padding: '10px' }}
+          >
+            <Input 
+              type="number" 
+              placeholder="Enter sold price" 
+              style={{ borderRadius: '4px' }}
+              addonBefore="$"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="soldNotes"
+            label={<span style={{ color: 'black', fontWeight: 'bold' }}>Sale Notes (Optional)</span>}
+            style={{ backgroundColor: 'white', padding: '10px' }}
+          >
+            <Input.TextArea placeholder="Add any notes about the sale (optional)" />
+          </Form.Item>
+
+          <Form.Item
+            style={{ backgroundColor: 'white', padding: '10px' }}
+          >
+            <Button type="primary" htmlType="submit" loading={loading} block>
+              Update Sold Equipment
             </Button>
           </Form.Item>
         </Form>

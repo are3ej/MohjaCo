@@ -91,6 +91,13 @@ const Header = () => {
     setIsContactDropdownOpen(!isContactDropdownOpen);
   };
 
+  const handleNavigation = (path) => {
+    // Scroll to top after navigation
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  };
+
   return (
     <ColorProvider route={location.pathname}>
       <ColorContext.Consumer>
@@ -119,6 +126,7 @@ const Header = () => {
                       <NavLink 
                         key={item.path}
                         to={item.path}
+                        onClick={() => handleNavigation(item.path)}
                         className={location.pathname === item.path ? 'active' : ''}
                       >
                         {item.icon}
@@ -161,8 +169,11 @@ const Header = () => {
                   <MobileNavLink 
                     key={item.path}
                     to={item.path} 
+                    onClick={() => {
+                      handleNavigation(item.path);
+                      setIsMenuOpen(false);
+                    }}
                     className={location.pathname === item.path ? 'active' : ''}
-                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item.icon}
                     <span>{item.label}</span>

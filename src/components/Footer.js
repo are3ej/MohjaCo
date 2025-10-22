@@ -336,6 +336,15 @@ const Footer = () => {
     }
   };
 
+  const handleLinkClick = (to) => {
+    // If it's an internal link, scroll to top after navigation
+    if (to.startsWith('/') && !to.startsWith('http')) {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
   return (
     <>
       <FooterWrapper
@@ -368,7 +377,7 @@ const Footer = () => {
               {[
                 { 
                   Icon: FacebookOutlined, 
-                  href: 'https://web.facebook.com/MohjaComany', 
+                  href: 'https://www.facebook.com/share/1A9FHZ4z6W/', 
                   label: 'Facebook' 
                 },
                 { 
@@ -417,6 +426,7 @@ const Footer = () => {
               <FooterLink 
                 key={to} 
                 to={to}
+                onClick={() => handleLinkClick(to)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -430,19 +440,22 @@ const Footer = () => {
           <FooterSection variants={itemVariants}>
             <FooterTitle>Our Services</FooterTitle>
             {[
-              { to: '/services/industrial-equipment', label: 'Industrial Equipment' },
-              { to: '/services/engineering-solutions', label: 'Engineering Solutions' },
-              { to: '/services/maintenance', label: 'Maintenance Support' },
-              { to: '/services/consulting', label: 'Technical Consulting' }
-            ].map(({ to, label }) => (
-              <FooterLink 
-                key={to} 
-                to={to}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              'Construction Equipment',
+              'Engineering Solutions',
+              'Maintenance Support',
+              'Technical Consulting'
+            ].map((label) => (
+              <div 
+                key={label}
+                style={{
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem',
+                  marginBottom: '0.5rem',
+                  padding: '0.25rem 0'
+                }}
               >
                 {label}
-              </FooterLink>
+              </div>
             ))}
           </FooterSection>
 

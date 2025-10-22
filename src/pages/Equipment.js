@@ -193,6 +193,131 @@ const UpdatedImageNumberOverlay = styled(ImageNumberOverlay)`
   }
 `;
 
+const StatusBadge = styled.div`
+  position: absolute;
+  top: 8px;
+  left: -12px;
+  padding: 8px 20px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-style: italic;
+  z-index: 15;
+  transform: rotate(-12deg) skewX(-5deg);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 12px 12px 0;
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.25),
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.2) 30%, 
+      rgba(255, 255, 255, 0.1) 70%, 
+      transparent 100%
+    );
+    border-radius: inherit;
+    transform: skewX(5deg);
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -8px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid;
+    transform: translateY(-50%) skewX(5deg);
+    filter: drop-shadow(-3px 0 3px rgba(0, 0, 0, 0.3));
+  }
+  
+  &.new {
+    background: linear-gradient(135deg, #e74c3c, #ff4757, #ff6b7a);
+    color: white;
+    animation: professionalPulse 3s infinite;
+    box-shadow: 
+      0 10px 20px rgba(231, 76, 60, 0.3),
+      0 6px 12px rgba(231, 76, 60, 0.2),
+      0 3px 6px rgba(231, 76, 60, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    
+    &::after {
+      border-right-color: #e74c3c;
+    }
+  }
+  
+  &.available {
+    background: linear-gradient(135deg, #27ae60, #2ed573, #7bed9f);
+    color: white;
+    box-shadow: 
+      0 10px 20px rgba(39, 174, 96, 0.3),
+      0 6px 12px rgba(39, 174, 96, 0.2),
+      0 3px 6px rgba(39, 174, 96, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    
+    &::after {
+      border-right-color: #27ae60;
+    }
+  }
+  
+  @keyframes professionalPulse {
+    0% {
+      transform: rotate(-12deg) skewX(-5deg) scale(1);
+      box-shadow: 
+        0 10px 20px rgba(231, 76, 60, 0.3),
+        0 6px 12px rgba(231, 76, 60, 0.2),
+        0 3px 6px rgba(231, 76, 60, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    }
+    50% {
+      transform: rotate(-12deg) skewX(-5deg) scale(1.02);
+      box-shadow: 
+        0 12px 24px rgba(231, 76, 60, 0.4),
+        0 8px 16px rgba(231, 76, 60, 0.3),
+        0 4px 8px rgba(231, 76, 60, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    }
+    100% {
+      transform: rotate(-12deg) skewX(-5deg) scale(1);
+      box-shadow: 
+        0 10px 20px rgba(231, 76, 60, 0.3),
+        0 6px 12px rgba(231, 76, 60, 0.2),
+        0 3px 6px rgba(231, 76, 60, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  &:hover {
+    transform: rotate(-12deg) skewX(-5deg) scale(1.05);
+    box-shadow: 
+      0 12px 24px rgba(0, 0, 0, 0.3),
+      0 8px 16px rgba(0, 0, 0, 0.2),
+      0 4px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  }
+`;
+
 const CardDetails = styled.div`
   padding: 20px;
   display: flex;
@@ -713,6 +838,14 @@ const categoryIcons = {
 const Equipment = () => {
   const { t } = useTranslation();
   const _navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    _navigate(path);
+    // Scroll to top after navigation
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  };
   
   const [equipmentList, setEquipmentList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -721,10 +854,12 @@ const Equipment = () => {
   const [lightboxImages, setLightboxImages] = useState([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [selectedEquipment, setSelectedEquipment] = useState(null);
+  const [clickedEquipmentId, setClickedEquipmentId] = useState(null);
   const [equipmentData, setEquipmentData] = useState([]);
   const [filteredEquipment, setFilteredEquipment] = useState([]);
   const [selectedEquipmentForModal, setSelectedEquipmentForModal] = useState(null);
   const [detailsModalVisible, setDetailsModalVisible] = useState(false);
+  const [latestEquipmentId, setLatestEquipmentId] = useState(null);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -735,24 +870,36 @@ const Equipment = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredEquipment.slice(indexOfFirstItem, indexOfLastItem);
 
-  const openLightbox = (equipment) => {
+  const openLightbox = (equipment, index = 0) => {
     if (!equipment.images || equipment.images.length === 0) return;
 
-    const lightboxImages = equipment.images.map((img, index) => {
-      const url = img.url || img;
-      const isVideo = url.toLowerCase().match(/\.(mp4|mov|avi|webm|mkv)$/);
-      
-      return {
-        src: url,
-        alt: `${equipment.name} - ${isVideo ? 'Video' : 'Image'} ${index + 1}`,
-        number: `${index + 1}/${equipment.images.length}`,
-        type: isVideo ? 'video' : 'image'
-      };
-    });
+    const lightboxImages = equipment.images.map((img, idx) => ({
+      src: img.url || img,
+      alt: `${equipment.name} - Image ${idx + 1}`,
+      number: `${idx + 1}/${equipment.images.length}`,
+    }));
 
     setLightboxImages(lightboxImages);
-    setLightboxIndex(0);
+    setLightboxIndex(index);
+    setClickedEquipmentId(equipment.id);
     setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    
+    // Scroll back to the clicked equipment card
+    if (clickedEquipmentId) {
+      setTimeout(() => {
+        const equipmentCard = document.getElementById(`equipment-card-${clickedEquipmentId}`);
+        if (equipmentCard) {
+          equipmentCard.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100); // Small delay to ensure lightbox is closed
+    }
   };
 
   const EquipmentDetailsModal = () => {
@@ -874,6 +1021,7 @@ const Equipment = () => {
               name: item.name || t('equipmentPage.unnamedEquipment'),
               category: item.category || 'uncategorized',
               status: item.status || 'available',
+              createdAt: item.createdAt || item.updatedAt || null,
               images: Array.isArray(item.images) 
                 ? item.images.map(img => ({
                     url: typeof img === 'string' 
@@ -887,6 +1035,12 @@ const Equipment = () => {
           })
           .filter(Boolean);  
   
+        // Determine latest equipment id by createdAt (ISO string) if available
+        const latest = [...sanitizedEquipment]
+          .filter(e => !!e.createdAt)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+
+        setLatestEquipmentId(latest?.id || null);
         setEquipmentList(sanitizedEquipment);
         setEquipmentData(sanitizedEquipment);
         setFilteredEquipment(sanitizedEquipment);
@@ -967,7 +1121,7 @@ const Equipment = () => {
             </HeroActionButton>
             <HeroActionButton
               icon={<FaDollarSign />}
-              onClick={() => _navigate('/sold-equipment')}
+              onClick={() => handleNavigation('/sold-equipment')}
             >
               {t('equipmentPage.viewSoldEquipment')}
             </HeroActionButton>
@@ -1016,9 +1170,13 @@ const Equipment = () => {
               ? (images[0].url || images[0]) 
               : '/images/equipment-placeholder.jpg');
 
+          // Mark only the most recently added equipment as NEW
+          const isNew = latestEquipmentId && equipment.id === latestEquipmentId;
+
           return (
             <GalleryItemCard
               key={equipment.id || `equipment-${index}`}
+              id={`equipment-card-${equipment.id || `equipment-${index}`}`}
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ 
@@ -1097,6 +1255,11 @@ const Equipment = () => {
                     />
                   );
                 })()}
+                {/* Status Badge */}
+                <StatusBadge className={isNew ? 'new' : 'available'}>
+                  {isNew ? 'NEW' : 'AVAILABLE'}
+                </StatusBadge>
+                
                 {imageCount > 0 && (
                   <UpdatedImageNumberOverlay>
                     1/{imageCount}
@@ -1140,237 +1303,48 @@ const Equipment = () => {
         }}
       />
 
+      {/* Lightbox */}
       {lightboxOpen && lightboxImages.length > 0 && (
-        <Modal
-          visible={lightboxOpen}
-          onCancel={() => setLightboxOpen(false)}
-          footer={null}
-          width="80%"
-          centered
-        >
-          <style>{`
-            @media (max-width: 600px) {
-              .m-lightbox-btn { width: 36px !important; height: 36px !important; font-size: 16px !important; padding: 6px !important; }
-              .m-next { right: 12px !important; }
-              .m-prev { left: 12px !important; }
-              .m-close { right: 60px !important; top: 12px !important; }
-            }
-          `}</style>
-          <Lightbox
-            open={lightboxOpen}
-            close={() => setLightboxOpen(false)}
-            slides={lightboxImages}
-            index={lightboxIndex}
-            plugins={[Zoom, Thumbnails]}
-            zoom={{
-              maxZoomPixelRatio: 3,
-              zoomStep: 0.2,
-              doubleTapScale: 2,
-              doubleTapDelay: 300,
-              doubleClickDelay: 300,
-              doubleClickMaxStops: 2,
-              keyboardMoveDistance: 50,
-              wheelZoomDistanceFactor: 50,
-              pinchZoomDistanceFactor: 50,
-              scrollToZoom: true,
-              wheelZoomDistanceFactor: 50,
-              pinchZoomDistanceFactor: 50
-            }}
-            carousel={{
-              finite: lightboxImages.length <= 1,
-              preload: 2,
-            }}
-            animation={{
-              fade: 300,
-              swipe: 300,
-            }}
-            styles={{
-              container: { 
-                backgroundColor: 'rgba(0, 0, 0, 0.9)' 
-              },
-            }}
-            render={{
-              slide: ({ slide, currentIndex }) => {
-                if (slide.type === 'video') {
-                  return (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000' }}>
-                      <video
-                        src={slide.src}
-                        controls
-                        autoPlay
-                        style={{
-                          maxWidth: '100%',
-                          maxHeight: '100%',
-                          objectFit: 'contain'
-                        }}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  );
-                }
-                return (
-                  <img
-                    src={slide.src}
-                    alt={slide.alt}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain'
-                    }}
-                  />
-                );
-              },
-              slideFooter: ({ slide, currentIndex }) => (
-                <div 
-                  style={{ 
-                    position: 'absolute', 
-                    bottom: 0, 
-                    left: 0, 
-                    right: 0, 
-                    padding: '16px 24px', 
-                    background: 'linear-gradient(transparent, rgba(0,0,0,0.8))', 
-                    color: 'white',
-                    textAlign: 'center',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    letterSpacing: '0.5px'
-                  }}
-                >
-                  {slide.alt} • {slide.number}
-                </div>
-              ),
-              buttonNext: () => (
-                <button
-                  className="m-lightbox-btn m-next"
-                  onClick={() => {
-                    if (lightboxImages.length > 0) {
-                      const nextIndex = (lightboxIndex + 1) % lightboxImages.length;
-                      setLightboxIndex(nextIndex);
-                    }
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    right: '24px',
-                    transform: 'translateY(-50%)',
-                    background: 'rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    color: 'white',
-                    padding: '12px',
-                    borderRadius: '50%',
-                    cursor: 'pointer',
-                    fontSize: '20px',
-                    zIndex: 1200,
-                    transition: 'all 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '48px',
-                    height: '48px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.2)';
-                    e.target.style.transform = 'translateY(-50%) scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.1)';
-                    e.target.style.transform = 'translateY(-50%) scale(1)';
-                  }}
-                  title="الصورة التالية"
-                >
-                  <RightOutlined />
-                </button>
-              ),
-              buttonPrev: () => (
-                <button
-                  className="m-lightbox-btn m-prev"
-                  onClick={() => {
-                    if (lightboxImages.length > 0) {
-                      const prevIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
-                      setLightboxIndex(prevIndex);
-                    }
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '24px',
-                    transform: 'translateY(-50%)',
-                    background: 'rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    color: 'white',
-                    padding: '12px',
-                    borderRadius: '50%',
-                    cursor: 'pointer',
-                    fontSize: '20px',
-                    zIndex: 1200,
-                    transition: 'all 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '48px',
-                    height: '48px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.2)';
-                    e.target.style.transform = 'translateY(-50%) scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.1)';
-                    e.target.style.transform = 'translateY(-50%) scale(1)';
-                  }}
-                  title="الصورة السابقة"
-                >
-                  <LeftOutlined />
-                </button>
-              ),
-              buttonClose: () => (
-                <button
-                  className="m-lightbox-btn m-close"
-                  onClick={() => setLightboxOpen(false)}
-                  style={{
-                    position: 'absolute',
-                    top: '16px',
-                    right: '80px',
-                    background: 'rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    color: 'white',
-                    padding: '10px',
-                    borderRadius: '50%',
-                    cursor: 'pointer',
-                    fontSize: '18px',
-                    zIndex: 1200,
-                    transition: 'all 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '44px',
-                    height: '44px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'rgba(255,0,0,0.2)';
-                    e.target.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(255,255,255,0.1)';
-                    e.target.style.transform = 'scale(1)';
-                  }}
-                  title="إغلاق المعرض"
-                >
-                  <CloseOutlined />
-                </button>
-              ),
-              // rely on Zoom plugin's built-in toolbar for zoom controls
-            }}
-          />
-        </Modal>
+        <Lightbox
+          open={lightboxOpen}
+          close={closeLightbox}
+          slides={lightboxImages}
+          index={lightboxIndex}
+          plugins={[Zoom]}
+          zoom={{
+            maxZoomPixelRatio: 3,
+            zoomStep: 0.2,
+            doubleTapScale: 2,
+            doubleTapDelay: 300,
+            doubleClickDelay: 300,
+            doubleClickMaxStops: 2,
+            keyboardMoveDistance: 50,
+            wheelZoomDistanceFactor: 50,
+            pinchZoomDistanceFactor: 50,
+            scrollToZoom: true
+          }}
+          render={{
+            slideFooter: ({ slide, currentIndex }) => (
+              <div 
+                style={{ 
+                  position: 'absolute', 
+                  bottom: 0, 
+                  left: 0, 
+                  right: 0, 
+                  padding: '16px 24px', 
+                  background: 'linear-gradient(transparent, rgba(0,0,0,0.8))', 
+                  color: 'white',
+                  textAlign: 'center',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  letterSpacing: '0.5px'
+                }}
+              >
+                {slide.alt} • {slide.number}
+              </div>
+            )
+          }}
+        />
       )}
 
       <EquipmentDetailsModal />

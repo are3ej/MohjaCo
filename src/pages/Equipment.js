@@ -31,7 +31,6 @@ import '../styles/Equipment.css';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import MOHJA_DESIGN from '../styles/design';
-import { useLightboxProps } from 'yet-another-react-lightbox';
 
 const { Option } = Select;
 
@@ -1355,65 +1354,7 @@ const Equipment = () => {
                   <CloseOutlined />
                 </button>
               ),
-              buttonZoomIn: () => {
-                // Use Lightbox Zoom context for better control (not direct DOM)
-                const { zoomIn } = useLightboxProps();
-                return (
-                  <button
-                    onClick={zoomIn}
-                    style={{
-                      position: 'absolute',
-                      top: '16px',
-                      left: '16px',
-                      background: 'rgba(0,108,204,0.85)',
-                      boxShadow: '0 2px 8px rgba(18,24,39,0.17)',
-                      border: 'none',
-                      color: '#fff',
-                      padding: 8,
-                      borderRadius: '50%',
-                      cursor: 'pointer',
-                      fontSize: 20,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      zIndex: 1002,
-                      transition: 'background 0.2s',
-                    }}
-                    aria-label="Zoom in"
-                  >
-                    <ZoomInOutlined />
-                  </button>
-                );
-              },
-              buttonZoomOut: () => {
-                const { zoomOut } = useLightboxProps();
-                return (
-                  <button
-                    onClick={zoomOut}
-                    style={{
-                      position: 'absolute',
-                      top: '60px',
-                      left: '16px',
-                      background: 'rgba(0,108,204,0.85)',
-                      boxShadow: '0 2px 8px rgba(18,24,39,0.17)',
-                      border: 'none',
-                      color: '#fff',
-                      padding: 8,
-                      borderRadius: '50%',
-                      cursor: 'pointer',
-                      fontSize: 20,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      zIndex: 1002,
-                      transition: 'background 0.2s',
-                    }}
-                    aria-label="Zoom out"
-                  >
-                    <ZoomInOutlined style={{ transform: 'rotate(45deg)' }} />
-                  </button>
-                );
-              }
+              // rely on Zoom plugin's built-in toolbar for zoom controls
             }}
           />
         </Modal>

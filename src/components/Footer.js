@@ -357,7 +357,7 @@ const Footer = () => {
           <FooterSection variants={itemVariants}>
             <img 
               src="/images/logo_5.png" 
-              alt="Mohja Company" 
+              alt="Mohja Company For Equipment Trading" 
               style={{ width: '180px', marginBottom: '1rem' }} 
             />
             <motion.p 
@@ -486,7 +486,7 @@ const Footer = () => {
       </FooterWrapper>
 
       <FooterBottom>
-        &copy; {new Date().getFullYear()} Mohja Company For Construction Equipment Trading . All Rights Reserved. 
+        &copy; {new Date().getFullYear()} Mohja Company For Equipment Trading . All Rights Reserved. 
       </FooterBottom>
     </>
   );
